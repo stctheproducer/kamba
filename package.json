@@ -40,7 +40,8 @@
     "#config/*": "./config/*.js",
     "#audit_resolvers/*": "./app/audit_resolvers/*.js",
     "#utils/*": "./app/utils/*.js",
-    "#emails/*": "./resources/emails/*.js"
+    "#emails/*": "./resources/emails/*.js",
+    "#drivers/*": "./app/drivers/*.js"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.8.2",

@@ -14,18 +14,15 @@
 |--------------------------------------------------------------------------
  */
 
-import { Oauth2Driver } from '@adonisjs/ally'
+import { Oauth2Driver, RedirectRequest } from '@adonisjs/ally'
 import type { HttpContext } from '@adonisjs/core/http'
 import type {
   AllyDriverContract,
   AllyUserContract,
   ApiRequestContract,
   LiteralStringUnion,
+  Oauth2DriverConfig,
 } from '@adonisjs/ally/types'
-import JWKS, { CertSigningKey, JwksClient, RsaSigningKey } from 'jwks-rsa'
-import { DateTime } from 'luxon'
-import JWT from 'jsonwebtoken'
-import stringHelpers from '@adonisjs/core/helpers/string'
 
 /**
  *
@@ -33,15 +30,19 @@ import stringHelpers from '@adonisjs/core/helpers/string'
  * token must have "token" and "type" properties and you may
  * define additional properties (if needed)
  */
-export type LogtoDriverAccessToken = {
+export type LogtoAccessToken = {
   token: string
   type: 'bearer'
+  expiresIn?: number
+  expiresAt?: Date
+  id_token?: string
+  scope?: string
 }
 
 /**
  * Scopes accepted by the driver implementation.
  */
-export type LogtoDriverScopes =
+export type LogtoScopes =
   | 'openid'
   | 'profile'
   | 'offline_access'
@@ -53,21 +54,20 @@ export type LogtoDriverScopes =
   | 'roles'
   | 'urn:logto:scope:organizations'
   | 'urn:logto:scope:organization_roles'
+  | 'all' // For management API
   | (string & {})
+
+export interface LogtoDriverContract extends AllyDriverContract<LogtoAccessToken, LogtoScopes> {
+  version: 'oauth2'
+}
 
 /**
  * The configuration accepted by the driver implementation.
  */
-export type LogtoDriverConfig = {
-  driver: 'logto'
-  clientId: string
-  clientSecret: string
-  callbackUrl: string
+export type LogtoDriverConfig = Oauth2DriverConfig & {
   endpoint: string
-  authorizeUrl?: string
-  accessTokenUrl?: string
   userInfoUrl?: string
-  scopes?: LiteralStringUnion<LogtoDriverScopes> | LogtoDriverScopes[]
+  scopes?: LiteralStringUnion<LogtoScopes>[]
 }
 
 /**
@@ -75,8 +75,8 @@ export type LogtoDriverConfig = {
  * to get user info.
  */
 export class LogtoDriver
-  extends Oauth2Driver<LogtoDriverAccessToken, LogtoDriverScopes>
-  implements AllyDriverContract<LogtoDriverAccessToken, LogtoDriverScopes>
+  extends Oauth2Driver<LogtoAccessToken, LogtoScopes>
+  implements AllyDriverContract<LogtoAccessToken, LogtoScopes>
 {
   /**
    * The URL for the redirect request. The user will be redirected on this page
@@ -99,11 +99,6 @@ export class LogtoDriver
    * Do not define query strings in this URL.
    */
   protected userInfoUrl = '/oidc/me'
-
-  /**
-   * JWKS Client, it is to validate Logto's access tokens
-   */
-  protected jwksClient: JwksClient | null = null
 
   /**
    * The param name for the authorization code. Read the documentation of your oauth
@@ -156,17 +151,6 @@ export class LogtoDriver
     this.userInfoUrl = this.config.userInfoUrl || this.config.endpoint.concat(this.userInfoUrl)
 
     /**
-     * Initiate JWKS client
-     */
-    this.jwksClient = JWKS({
-      rateLimit: true,
-      cache: true,
-      cacheMaxEntries: 100,
-      cacheMaxAge: stringHelpers.milliseconds.parse('1d'),
-      jwksUri: this.config.endpoint.concat('/oidc/jwks'),
-    })
-
-    /**
      * Extremely important to call the following method to clear the
      * state set by the redirect request.
      *
@@ -180,21 +164,87 @@ export class LogtoDriver
    * is made by the base implementation of "Oauth2" driver and this is a
    * hook to pre-configure the request.
    */
-  // protected configureRedirectRequest(request: RedirectRequest<LogtoDriverScopes>) {}
+  protected configureRedirectRequest(request: RedirectRequest<LogtoScopes>) {
+    /**
+     * Define user defined scopes or the default ones
+     */
+    request.scopes(
+      this.config.scopes || ['openid', 'profile', 'phone', 'email', 'custom_data', 'offline_access']
+    )
+
+    // Add response_type as 'code' which is required for authorization code flow
+    request.param('response_type', 'code')
+  }
 
   /**
    * Optionally configure the access token request. The actual request is made by
    * the base implementation of "Oauth2" driver and this is a hook to pre-configure
    * the request
    */
-  // protected configureAccessTokenRequest(request: ApiRequest) {}
+  protected configureAccessTokenRequest(request: ApiRequestContract) {
+    // Set the grant_type for token exchange
+    request.field('grant_type', 'authorization_code')
+
+    // Add client_id and client_secret for authentication
+    request.field('client_id', this.config.clientId)
+    request.field('client_secret', this.config.clientSecret)
+
+    // Specify the redirect_uri - must match the one used in the authorization request
+    request.field('redirect_uri', this.config.callbackUrl)
+  }
+
+  /**
+   * Returns the HTTP request with the authorization header set
+   */
+  protected getAuthenticatedRequest(url: string, token: string) {
+    const request = this.httpClient(url)
+    request.header('Authorization', `Bearer ${token} `)
+    request.header('Accept', 'application/json')
+    request.parseAs('json')
+    return request
+  }
+
+  /**
+   * Fetches the user info from the Twitch API
+   */
+  protected async getUserInfo(token: string, callback?: (request: ApiRequestContract) => void) {
+    const logger = this.ctx.logger.child({ context: 'LogtoDriver.user' })
+
+    const request = this.getAuthenticatedRequest(this.userInfoUrl, token)
+    logger.debug('Retrieved authenticated request')
+
+    /**
+     * Allow end user to configure the request. This should be called after your custom
+     * configuration, so that the user can override them (if needed)
+     */
+    if (typeof callback === 'function') {
+      callback(request)
+    }
+
+    // Make the request to get user information
+    const body = await request.get()
+    logger.debug(body, 'Response body')
+
+    return {
+      id: body.sub,
+      nickName: body.name,
+      name: body.name,
+      email: body.email,
+      emailVerificationState: body.email_verified ? ('verified' as const) : ('unverified' as const),
+      avatarUrl: body.picture,
+      original: body,
+    }
+  }
 
   /**
    * Update the implementation to tell if the error received during redirect
    * means "ACCESS DENIED".
    */
-  accessDenied() {
-    return this.ctx.request.input('error') === 'user_denied'
+  accessDenied(): boolean {
+    const error = this.getError()
+    if (!error) return false
+    // Logto typically returns 'access_denied' or 'unauthorized' for access denied errors
+    return error === 'access_denied' || error === 'unauthorized'
   }
 
   /**
@@ -206,47 +256,56 @@ export class LogtoDriver
    */
   async user(
     callback?: (request: ApiRequestContract) => void
-  ): Promise<AllyUserContract<LogtoDriverAccessToken>> {
-    const accessToken = await this.accessToken()
-    const request = this.httpClient(this.config.userInfoUrl || this.userInfoUrl)
+  ): Promise<AllyUserContract<LogtoAccessToken>> {
+    const accessToken = await this.accessToken(callback)
+    const user = await this.getUserInfo(accessToken.token, callback)
 
-    /**
-     * Allow end user to configure the request. This should be called after your custom
-     * configuration, so that the user can override them (if needed)
-     */
-    if (typeof callback === 'function') {
-      callback(request)
+    return {
+      ...user,
+      token: accessToken,
     }
-
-    /**
-     * Write your implementation details here.
-     */
   }
 
   async userFromToken(
     accessToken: string,
     callback?: (request: ApiRequestContract) => void
-  ): Promise<AllyUserContract<{ token: string; type: 'bearer' }>> {
-    const request = this.httpClient(this.config.userInfoUrl || this.userInfoUrl)
+  ): Promise<AllyUserContract<LogtoAccessToken>> {
+    const user = await this.getUserInfo(accessToken, callback)
 
-    /**
-     * Allow end user to configure the request. This should be called after your custom
-     * configuration, so that the user can override them (if needed)
-     */
-    if (typeof callback === 'function') {
-      callback(request)
+    return {
+      ...user,
+      token: { token: accessToken, type: 'bearer' as const },
     }
-
-    /**
-     * Write your implementation details here
-     */
   }
+
+  /**
+   * Get a token for management API access
+   */
+  // async getManagementApiToken(): Promise<LogtoAccessToken> {
+  //   const request = this.httpClient(this.accessTokenUrl)
+
+  //   // Set up the request for client credentials flow
+  //   request.header('Content-Type', 'application/x-www-form-urlencoded')
+  //   request.field('grant_type', 'client_credentials')
+  //   request.field('client_id', this.config.clientId)
+  //   request.field('client_secret', this.config.clientSecret)
+  //   request.field('resource', `${this.config.endpoint}/api`)
+  //   request.field('scope', 'all')
+
+  //   const body = await request.post()
+
+  //   return {
+  //     token: body.access_token,
+  //     type: 'bearer' as const,
+  //     expiresIn: body.expires_in,
+  //   }
+  // }
 }
 
 /**
- * The factory function to reference the driver implementation
- * inside the "config/ally.ts" file.
+ * The factory function to reference the Logto driver implementation
+ *
  */
-export function LogtoDriverService(config: LogtoDriverConfig): (ctx: HttpContext) => LogtoDriver {
+export function logto(config: LogtoDriverConfig): (ctx: HttpContext) => LogtoDriver {
   return (ctx) => new LogtoDriver(ctx, config)
 }
