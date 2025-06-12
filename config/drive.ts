@@ -9,29 +9,20 @@ const driveConfig = defineConfig({
    * The services object can be used to configure multiple file system
    * services each using the same or a different driver.
    */
-  services: { 
+  services: {
     fs: services.fs({
       location: app.makePath('storage'),
       serveFiles: true,
       routeBasePath: '/uploads',
       visibility: 'public',
     }),
-    s3: services.s3({
-      credentials: {
-        accessKeyId: env.get('AWS_ACCESS_KEY_ID'),
-        secretAccessKey: env.get('AWS_SECRET_ACCESS_KEY'),
-      },
-      region: env.get('AWS_REGION'),
-      bucket: env.get('S3_BUCKET'),
-      visibility: 'public',
-    }),
     r2: services.s3({
       credentials: {
-        accessKeyId: env.get('R2_KEY'),
-        secretAccessKey: env.get('R2_SECRET'),
+        accessKeyId: env.get('R2_KEY', ''),
+        secretAccessKey: env.get('R2_SECRET', ''),
       },
       region: 'auto',
-      bucket: env.get('R2_BUCKET'),
+      bucket: env.get('R2_BUCKET', ''),
       endpoint: env.get('R2_ENDPOINT'),
       visibility: 'public',
     }),

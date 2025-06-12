@@ -7,9 +7,9 @@ const attachmentConfig = defineConfig({
       converter: () => import('@jrmc/adonis-attachment/converters/image_converter'),
       options: {
         resize: 300,
-      }
-    }
-  }
+      },
+    },
+  },
 })
 
 export default attachmentConfig

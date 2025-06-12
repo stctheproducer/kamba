@@ -1,6 +1,7 @@
 import app from '@adonisjs/core/services/app'
 import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
 import type { StatusPageRange, StatusPageRenderer } from '@adonisjs/core/types/http'
+import ProblemException from './problem_exception.js'
 
 export default class HttpExceptionHandler extends ExceptionHandler {
   /**
@@ -30,6 +31,32 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * response to the client
    */
   async handle(error: unknown, ctx: HttpContext) {
+    // If the error is an instance of ProblemException, we can handle it
+    if (error instanceof ProblemException) {
+      await error.handle(error, ctx)
+      return
+    }
+
+    // For other exceptions, we can log the error and return a generic response
+    if (!this.debug) {
+      // Log the error
+      ctx.logger.error({ context: 'HttpExceptionHandler', error }, 'Unhandled exception occurred')
+      // Optionally, you can report the error to a monitoring service here
+      const genericError = new ProblemException(
+        'Internal Server Error',
+        'https://httpstatuses.com/500',
+        'An unexpected error occurred. Please try again later.',
+        ctx.request.url(),
+        500,
+        { requestId: ctx.request.id() }
+      )
+      await genericError.handle(genericError, ctx)
+      return
+    }
+
+    // In debug mode, we can let the default exception handler take care of it
+    // so that it can display the stack trace and other debug information
+    ctx.logger.error({ context: 'HttpExceptionHandler', error }, 'Unhandled exception')
     return super.handle(error, ctx)
   }
 
