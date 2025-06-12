@@ -4,16 +4,16 @@ import { defineConfig, transports } from '@adonisjs/mail'
 const mailConfig = defineConfig({
   default: 'smtp',
 
-   /**
-    * The mailers object can be used to configure multiple mailers
-    * each using a different transport or same transport with different
-    * options.
+  /**
+   * The mailers object can be used to configure multiple mailers
+   * each using a different transport or same transport with different
+   * options.
    */
-  mailers: { 
+  mailers: {
     smtp: transports.smtp({
-      host: env.get('SMTP_HOST'),
-      port: env.get('SMTP_PORT'),
-			/**
+      host: env.get('SMTP_HOST', '127.0.0.1'),
+      port: env.get('SMTP_PORT', '1025'),
+      /**
        * Uncomment the auth block if your SMTP
        * server needs authentication
        */
@@ -23,23 +23,17 @@ const mailConfig = defineConfig({
         pass: env.get('SMTP_PASSWORD'),
       }, */
     }),
-		 
+
     ses: transports.ses({
       apiVersion: '2010-12-01',
-      region: env.get('AWS_REGION'),
+      region: env.get('AWS_REGION', ''),
       credentials: {
-        accessKeyId: env.get('AWS_ACCESS_KEY_ID'),
-        secretAccessKey: env.get('AWS_SECRET_ACCESS_KEY'),
+        accessKeyId: env.get('AWS_ACCESS_KEY_ID', ''),
+        secretAccessKey: env.get('AWS_SECRET_ACCESS_KEY', ''),
       },
       sendingRate: 10,
       maxConnections: 5,
     }),
-		    
-    resend: transports.resend({
-      key: env.get('RESEND_API_KEY'),
-      baseUrl: 'https://api.resend.com',
-    }),
-    
   },
 })
 

@@ -1,6 +1,7 @@
 import env from '#start/env'
 import app from '@adonisjs/core/services/app'
 import { defineConfig, targets } from '@adonisjs/core/logger'
+import string from '@adonisjs/core/helpers/string'
 
 const loggerConfig = defineConfig({
   default: 'app',
@@ -12,7 +13,7 @@ const loggerConfig = defineConfig({
   loggers: {
     app: {
       enabled: true,
-      name: env.get('APP_NAME'),
+      name: string.snakeCase(env.get('APP_NAME', 'adonis')),
       level: env.get('LOG_LEVEL'),
       transport: {
         targets: targets()

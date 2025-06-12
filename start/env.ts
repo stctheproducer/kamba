@@ -1,5 +1,4 @@
-import '@foadonis/crypt'
-import '@foadonis/crypt'
+import '@dotenvx/dotenvx/config'
 /*
 |--------------------------------------------------------------------------
 | Environment variables service
@@ -16,9 +15,10 @@ import { Env } from '@adonisjs/core/env'
 export default await Env.create(new URL('../', import.meta.url), {
   NODE_ENV: Env.schema.enum(['development', 'production', 'test'] as const),
   PORT: Env.schema.number(),
+  APP_NAME: Env.schema.string.optional(),
   APP_KEY: Env.schema.string(),
   HOST: Env.schema.string({ format: 'host' }),
-  LOG_LEVEL: Env.schema.string(),
+  LOG_LEVEL: Env.schema.enum(['trace', 'debug', 'info', 'warn', 'error', 'fatal'] as const),
 
   /*
   |----------------------------------------------------------
@@ -43,21 +43,20 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring the mail package
   |----------------------------------------------------------
   */
-  AWS_ACCESS_KEY_ID: Env.schema.string(),
-  AWS_SECRET_ACCESS_KEY: Env.schema.string(),
-  AWS_REGION: Env.schema.string(),
+  AWS_ACCESS_KEY_ID: Env.schema.string.optionalWhen(process.env.NODE_ENV !== 'production'),
+  AWS_SECRET_ACCESS_KEY: Env.schema.string.optionalWhen(process.env.NODE_ENV !== 'production'),
+  AWS_REGION: Env.schema.string.optionalWhen(process.env.NODE_ENV !== 'production'),
 
   /*
   |----------------------------------------------------------
   | Variables for configuring the drive package
   |----------------------------------------------------------
   */
-  DRIVE_DISK: Env.schema.enum(['fs', 's3', 'r2'] as const),
-  S3_BUCKET: Env.schema.string(),
-  R2_KEY: Env.schema.string(),
-  R2_SECRET: Env.schema.string(),
-  R2_BUCKET: Env.schema.string(),
-  R2_ENDPOINT: Env.schema.string(),
+  DRIVE_DISK: Env.schema.enum(['fs', 'r2'] as const),
+  R2_KEY: Env.schema.string.optionalWhen(process.env.NODE_ENV !== 'production'),
+  R2_SECRET: Env.schema.string.optionalWhen(process.env.NODE_ENV !== 'production'),
+  R2_BUCKET: Env.schema.string.optionalWhen(process.env.NODE_ENV !== 'production'),
+  R2_ENDPOINT: Env.schema.string.optionalWhen(process.env.NODE_ENV !== 'production'),
 
   /*
   |----------------------------------------------------------
@@ -71,25 +70,20 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring the mail package
   |----------------------------------------------------------
   */
-  SMTP_HOST: Env.schema.string(),
-  SMTP_PORT: Env.schema.string(),
-  RESEND_API_KEY: Env.schema.string(),
+  SMTP_HOST: Env.schema.string.optionalWhen(process.env.NODE_ENV === 'production'),
+  SMTP_PORT: Env.schema.string.optionalWhen(process.env.NODE_ENV === 'production'),
 
   /*
   |----------------------------------------------------------
   | Variables for configuring ally package
   |----------------------------------------------------------
   */
-  FACEBOOK_CLIENT_ID: Env.schema.string(),
-  FACEBOOK_CLIENT_SECRET: Env.schema.string(),
-  GITHUB_CLIENT_ID: Env.schema.string(),
-  GITHUB_CLIENT_SECRET: Env.schema.string(),
-  GOOGLE_CLIENT_ID: Env.schema.string(),
-  GOOGLE_CLIENT_SECRET: Env.schema.string(),
-  LINKEDIN_CLIENT_ID: Env.schema.string(),
-  LINKEDIN_CLIENT_SECRET: Env.schema.string(),
-  TWITTER_CLIENT_ID: Env.schema.string(),
-  TWITTER_CLIENT_SECRET: Env.schema.string(),
+  GITHUB_CLIENT_ID: Env.schema.string.optional(),
+  GITHUB_CLIENT_SECRET: Env.schema.string.optional(),
+  LOGTO_CLIENT_ID: Env.schema.string(),
+  LOGTO_CLIENT_SECRET: Env.schema.string(),
+  LOGTO_REDIRECT_URI: Env.schema.string({ format: 'url' }),
+  LOGTO_ENDPOINT: Env.schema.string({ format: 'url' }),
 
   REDIS_HOST: Env.schema.string({ format: 'host' }),
   REDIS_PORT: Env.schema.number(),
@@ -98,5 +92,5 @@ export default await Env.create(new URL('../', import.meta.url), {
   TURNSTILE_SITE_KEY: Env.schema.string.optional(),
   TURNSTILE_SECRET: Env.schema.string.optional(),
   RECAPTCHA_SITE_KEY: Env.schema.string.optional(),
-  RECAPTCHA_SECRET: Env.schema.string.optional()
+  RECAPTCHA_SECRET: Env.schema.string.optional(),
 })

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": false,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "inertia/css/app.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
+  },
+  "aliases": {
+    "components": "#audit_resolvers/components",
+    "utils": "#audit_resolvers/lib/utils",
+    "ui": "#audit_resolvers/components/ui",
+    "lib": "#audit_resolvers/lib",
+    "hooks": "#audit_resolvers/hooks"
+  },
+  "iconLibrary": "lucide"
+}

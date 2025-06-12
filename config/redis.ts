@@ -1,6 +1,7 @@
 import env from '#start/env'
 import { defineConfig } from '@adonisjs/redis'
 import { InferConnections } from '@adonisjs/redis/types'
+import string from '@adonisjs/core/helpers/string'
 
 const redisConfig = defineConfig({
   connection: 'main',
@@ -21,10 +22,29 @@ const redisConfig = defineConfig({
       port: env.get('REDIS_PORT'),
       password: env.get('REDIS_PASSWORD', ''),
       db: 0,
-      keyPrefix: '',
+      keyPrefix: `${string.snakeCase(env.get('APP_NAME', 'adonis'))}:`,
       retryStrategy(times) {
         return times > 10 ? null : times * 50
       },
+    },
+
+    limiter: {
+      host: env.get('REDIS_HOST'),
+      port: env.get('REDIS_PORT'),
+      password: env.get('REDIS_PASSWORD', ''),
+      db: 1,
+      keyPrefix: 'limiter:',
+      retryStrategy(times) {
+        return times > 10 ? null : times * 50
+      },
+    },
+
+    transmit: {
+      host: env.get('REDIS_HOST'),
+      port: env.get('REDIS_PORT'),
+      password: env.get('REDIS_PASSWORD', ''),
+      db: 1,
+      keyPrefix: 'transmit:',
     },
   },
 })
