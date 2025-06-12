@@ -13,6 +13,9 @@
       "#emails/*": [
         "./app/emails/*.js"
       ],
+      "#drivers/*": [
+        "./app/drivers/*.js"
+      ]
     }
   },
   "exclude": [
