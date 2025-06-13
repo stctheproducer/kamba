@@ -19,7 +19,8 @@
     "env:test:set": "dotenvx set -f .env.test --",
     "env:test:get": "dotenvx get -f .env.test --",
     "env:prod:set": "dotenvx set -f .env.production --",
-    "env:prod:get": "dotenvx get -f .env.production --"
+    "env:prod:get": "dotenvx get -f .env.production --",
+    "shad:add": "pnpm dlx shadcn@latest add"
   },
   "imports": {
     "#controllers/*": "./app/controllers/*.js",
@@ -41,7 +42,8 @@
     "#audit_resolvers/*": "./app/audit_resolvers/*.js",
     "#utils/*": "./app/utils/*.js",
     "#emails/*": "./resources/emails/*.js",
-    "#drivers/*": "./app/drivers/*.js"
+    "#drivers/*": "./app/drivers/*.js",
+    "#api": "./.adonisjs/index.js"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^7.8.2",
@@ -97,13 +99,15 @@
     "@inertiajs/react": "^2.0.12",
     "@jrmc/adonis-attachment": "^4.0.1",
     "@logto/node": "^3.1.5",
-    "@logto/react": "^4.0.8",
+    "@radix-ui/react-slot": "^1.2.3",
     "@react-email/components": "0.0.42",
     "@react-email/render": "1.1.2",
     "@stouder-io/adonis-auditing": "^1.1.8",
     "@tailwindcss/vite": "^4.1.9",
     "@trigger.dev/sdk": "^3.3.17",
+    "@tuyau/client": "^0.2.9",
     "@tuyau/core": "^0.4.0",
+    "@tuyau/inertia": "^0.0.14",
     "@vinejs/vine": "^3.0.1",
     "adonis-captcha-guard": "^1.0.1",
     "adonis-lucid-filter": "^5.2.0",
