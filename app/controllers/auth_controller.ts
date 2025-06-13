@@ -2,6 +2,8 @@ import UnauthorizedException from '#exceptions/unauthorized_exception'
 import { tryCatch } from '#utils/try_catch'
 import type { HttpContext } from '@adonisjs/core/http'
 
+// import {} from '@ai-sdk'
+
 export default class AuthController {
   async login({ ally, inertia }: HttpContext) {
     // Redirect user to Logto for authentication
