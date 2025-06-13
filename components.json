@@ -11,11 +11,11 @@
     "prefix": ""
   },
   "aliases": {
-    "components": "#audit_resolvers/components",
-    "utils": "#audit_resolvers/lib/utils",
-    "ui": "#audit_resolvers/components/ui",
-    "lib": "#audit_resolvers/lib",
-    "hooks": "#audit_resolvers/hooks"
+    "components": "~/components",
+    "utils": "~/utils",
+    "ui": "~/components/ui",
+    "lib": "~/lib",
+    "hooks": "~/hooks"
   },
   "iconLibrary": "lucide"
 }

@@ -31,6 +31,12 @@ export default class HttpExceptionHandler extends ExceptionHandler {
    * response to the client
    */
   async handle(error: unknown, ctx: HttpContext) {
+    const logger = ctx.logger.child({
+      context: 'HttpExceptionHandler.handle',
+      method: ctx.request.method(),
+      instance: ctx.request.url(),
+    })
+
     // If the error is an instance of ProblemException, we can handle it
     if (error instanceof ProblemException) {
       await error.handle(error, ctx)
@@ -40,7 +46,7 @@ export default class HttpExceptionHandler extends ExceptionHandler {
     // For other exceptions, we can log the error and return a generic response
     if (!this.debug) {
       // Log the error
-      ctx.logger.error({ context: 'HttpExceptionHandler', error }, 'Unhandled exception occurred')
+      logger.error({ error }, 'Unhandled exception occurred')
       // Optionally, you can report the error to a monitoring service here
       const genericError = new ProblemException(
         'Internal Server Error',
@@ -56,7 +62,7 @@ export default class HttpExceptionHandler extends ExceptionHandler {
 
     // In debug mode, we can let the default exception handler take care of it
     // so that it can display the stack trace and other debug information
-    ctx.logger.error({ context: 'HttpExceptionHandler', error }, 'Unhandled exception')
+    logger.error({ error }, 'Unhandled exception')
     return super.handle(error, ctx)
   }
 

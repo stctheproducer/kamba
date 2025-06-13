@@ -8,12 +8,6 @@
 |
 */
 
-/**
-|--------------------------------------------------------------------------
- *  Search keyword "LogtoDriver" and replace it with a meaningful name
-|--------------------------------------------------------------------------
- */
-
 import { Oauth2Driver, RedirectRequest } from '@adonisjs/ally'
 import type { HttpContext } from '@adonisjs/core/http'
 import type {
@@ -33,10 +27,10 @@ import type {
 export type LogtoAccessToken = {
   token: string
   type: 'bearer'
-  expiresIn?: number
-  expiresAt?: Date
-  id_token?: string
-  scope?: string
+  expiresIn: number
+  expiresAt: Date
+  id_token: string
+  scope: string
 }
 
 /**
@@ -269,7 +263,7 @@ export class LogtoDriver
   async userFromToken(
     accessToken: string,
     callback?: (request: ApiRequestContract) => void
-  ): Promise<AllyUserContract<LogtoAccessToken>> {
+  ): Promise<AllyUserContract<Pick<LogtoAccessToken, 'token' | 'type'>>> {
     const user = await this.getUserInfo(accessToken, callback)
 
     return {

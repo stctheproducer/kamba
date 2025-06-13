@@ -1,11 +1,17 @@
+// oxlint-disable triple-slash-reference
 /// <reference path="../../config/inertia.ts" />
 /// <reference path="../../adonisrc.ts" />
+/// <reference path="../../config/ally.ts" />
+/// <reference path="../../config/auth.ts" />
+/// <reference path="../../config/tuyau.ts" />
 
 // import '../css/app.css';
 import { hydrateRoot } from 'react-dom/client'
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from '@adonisjs/inertia/helpers'
-import Layout from '~/layouts/default'
+import { TuyauProvider } from '@tuyau/inertia/react'
+import Layout from '@/layouts/default'
+import { tuyau } from './tuyau';
 
 interface PageModule {
   default: {
@@ -14,6 +20,7 @@ interface PageModule {
 }
 
 const appName = import.meta.env.VITE_APP_NAME || 'AdonisJS'
+
 
 createInertiaApp({
   progress: { color: '#0097a7' },
@@ -36,7 +43,13 @@ createInertiaApp({
 
   setup({ el, App, props }) {
 
-    hydrateRoot(el, <App {...props} />)
-
+    hydrateRoot(
+      el,
+      <>
+        <TuyauProvider client={tuyau}>
+          <App {...props} />
+        </TuyauProvider>
+      </>
+    )
   },
 });

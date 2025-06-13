@@ -1,6 +1,8 @@
 import ReactDOMServer from 'react-dom/server'
 import { createInertiaApp } from '@inertiajs/react'
-import Layout from '~/layouts/default'
+import Layout from '@/layouts/default'
+import { TuyauProvider } from '@tuyau/inertia/react';
+import { tuyau } from './tuyau';
 
 interface PageModule {
   default: {
@@ -21,6 +23,9 @@ export default function render(initialPage: any) {
 
       return page
     },
-    setup: ({ App, props }) => <App {...props} />,
+    setup: ({ App, props }) => (
+      <TuyauProvider client={tuyau}>
+        <App {...props} />
+      </TuyauProvider>),
   })
 }

@@ -7,7 +7,40 @@
 import type { MakeTuyauRequest, MakeTuyauResponse } from '@tuyau/utils/types'
 import type { InferInput } from '@vinejs/vine/types'
 
+type AuthLogtoRedirectGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/auth_controller.ts').default['login'], false>
+}
+type AuthLogtoCallbackGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/auth_controller.ts').default['handleCallback'], false>
+}
+type AuthLogoutPost = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/auth_controller.ts').default['logout'], false>
+}
 export interface ApiDefinition {
+  'auth': {
+    'logto': {
+      'redirect': {
+        '$url': {
+        };
+        '$get': AuthLogtoRedirectGetHead;
+        '$head': AuthLogtoRedirectGetHead;
+      };
+      'callback': {
+        '$url': {
+        };
+        '$get': AuthLogtoCallbackGetHead;
+        '$head': AuthLogtoCallbackGetHead;
+      };
+    };
+    'logout': {
+      '$url': {
+      };
+      '$post': AuthLogoutPost;
+    };
+  };
 }
 const routes = [
   {
@@ -17,8 +50,47 @@ const routes = [
     method: ["GET","HEAD"],
     types: {} as unknown,
   },
+  {
+    params: [],
+    name: 'auth.login',
+    path: '/auth/login',
+    method: ["GET","HEAD"],
+    types: {} as unknown,
+  },
+  {
+    params: [],
+    name: 'auth.logto.redirect',
+    path: '/auth/logto/redirect',
+    method: ["GET","HEAD"],
+    types: {} as AuthLogtoRedirectGetHead,
+  },
+  {
+    params: [],
+    name: 'auth.logto.callback',
+    path: '/auth/logto/callback',
+    method: ["GET","HEAD"],
+    types: {} as AuthLogtoCallbackGetHead,
+  },
+  {
+    params: [],
+    name: 'auth.logout',
+    path: '/auth/logout',
+    method: ["POST"],
+    types: {} as AuthLogoutPost,
+  },
+  {
+    params: [],
+    name: 'admin.logto.management.token',
+    path: '/ubuteko/token',
+    method: ["GET","HEAD"],
+    types: {} as unknown,
+  },
 ] as const;
 export const api = {
   routes,
   definition: {} as ApiDefinition
+}
+declare module '@tuyau/inertia/types' {
+  type InertiaApi = typeof api
+  export interface Api extends InertiaApi {}
 }

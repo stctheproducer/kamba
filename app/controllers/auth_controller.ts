@@ -3,9 +3,9 @@ import { tryCatch } from '#utils/try_catch'
 import type { HttpContext } from '@adonisjs/core/http'
 
 export default class AuthController {
-  async login({ ally }: HttpContext) {
+  async login({ ally, inertia }: HttpContext) {
     // Redirect user to Logto for authentication
-    return ally.use('logto').redirect()
+    inertia.location(await ally.use('logto').getRedirectUrl())
   }
 
   async handleCallback({ ally, request, response, auth: _, logger: parentLogger }: HttpContext) {
@@ -34,7 +34,7 @@ export default class AuthController {
 
     const [user, userError] = await tryCatch(() => logto.user())
 
-    logger.debug(user)
+    logger.debug(user, 'User has been retrieved')
 
     if (userError) {
       logger.error({ error: userError }, 'Failed to retrieve user')
@@ -57,7 +57,7 @@ export default class AuthController {
     // const user = auth.use('web')
     // await user.logout()
 
-    logger.debug('User session ended')
+    logger.debug('User session has ended')
 
     response.redirect('/')
   }
