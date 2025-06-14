@@ -3,6 +3,8 @@ import { BaseModel, column, beforeCreate } from '@adonisjs/lucid/orm'
 import { v7 as uuidv7 } from 'uuid'
 
 export default class File extends BaseModel {
+  static selfAssignPrimaryKey = true
+
   @beforeCreate()
   static assignUuid(file: File) {
     if (!file.id) {

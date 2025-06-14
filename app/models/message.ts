@@ -7,6 +7,8 @@ import { SoftDeletes } from 'adonis-lucid-soft-deletes'
 import { v7 as uuidv7 } from 'uuid'
 
 export default class Message extends compose(BaseModel, SoftDeletes) {
+  static selfAssignPrimaryKey = true
+
   @beforeCreate()
   static assignUuid(message: Message) {
     if (!message.id) {
