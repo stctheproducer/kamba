@@ -1,6 +1,7 @@
 onlyBuiltDependencies:
   - '@swc/core'
   - '@tailwindcss/oxide'
+  - better-sqlite3
   - esbuild
   - exifreader
   - msgpackr-extract

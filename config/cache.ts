@@ -1,14 +1,20 @@
 import { defineConfig, store, drivers } from '@adonisjs/cache'
+import env from '#start/env'
 
 const cacheConfig = defineConfig({
-  default: 'default',
+  default: env.get('CACHE_DRIVER', 'memory'),
 
   stores: {
-    memoryOnly: store().useL1Layer(drivers.memory()),
-
-    default: store()
+    memory: store().useL1Layer(drivers.memory()),
+    database: store()
       .useL1Layer(drivers.memory())
-
+      .useL2Layer(
+        drivers.database({
+          connectionName: 'cache',
+        })
+      ),
+    redis: store()
+      .useL1Layer(drivers.memory())
       .useL2Layer(
         drivers.redis({
           connectionName: 'main',

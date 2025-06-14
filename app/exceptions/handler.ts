@@ -1,5 +1,6 @@
 import app from '@adonisjs/core/services/app'
 import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
+import { errors as limiterErrors } from '@adonisjs/limiter'
 import type { StatusPageRange, StatusPageRenderer } from '@adonisjs/core/types/http'
 import ProblemException from './problem_exception.js'
 
@@ -36,6 +37,25 @@ export default class HttpExceptionHandler extends ExceptionHandler {
       method: ctx.request.method(),
       instance: ctx.request.url(),
     })
+
+    if (error instanceof limiterErrors.E_TOO_MANY_REQUESTS) {
+      const message = error.getResponseMessage(ctx)
+      const headers = error.getDefaultHeaders()
+      logger.warn({ error, headers }, message)
+
+      Object.keys(headers).forEach((key) => ctx.response.header(key, headers[key]))
+
+      const tooManyRequestsException = new ProblemException(
+        'Too Many Requests',
+        `https://httpstatuses.com/${error.status}`,
+        message,
+        ctx.request.url(),
+        error.status,
+        { requestId: ctx.request.id() }
+      )
+      await tooManyRequestsException.handle(tooManyRequestsException, ctx)
+      return
+    }
 
     // If the error is an instance of ProblemException, we can handle it
     if (error instanceof ProblemException) {

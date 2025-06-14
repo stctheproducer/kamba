@@ -8,12 +8,12 @@ export default class extends BaseSchema {
       table.increments('id').notNullable()
 
       table.text('user_type').nullable()
-      table.integer('user_id').nullable()
+      table.uuid('user_id').nullable()
 
       table.text('event').notNullable()
 
       table.text('auditable_type').notNullable()
-      table.integer('auditable_id').notNullable()
+      table.uuid('auditable_id').notNullable()
 
       table.jsonb('old_values').nullable()
       table.jsonb('new_values').nullable()

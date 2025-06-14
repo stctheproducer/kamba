@@ -35,5 +35,6 @@ I want to create an AI chat application with an interface that looks like Claude
 - Resumable streams to continue generation after page refresh
 - Chat sharing to share conversations with others
 - Local first storage
+- Onboarding flow for new instances of the website
 
 I need the system to built with a service oriented structure in mind so that I can easily branch into microservices. I need suggestions for how I can handle realtime.
