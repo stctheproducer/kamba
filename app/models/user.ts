@@ -8,6 +8,7 @@ import Chat from '#models/chat'
 import UserModel from '#models/user_model'
 import { v7 as uuidv7 } from 'uuid'
 import Subscription from '#models/subscription'
+import { DbRememberMeTokensProvider } from '@adonisjs/auth/session'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email', 'username'],
@@ -17,6 +18,9 @@ const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
 // Note: Regular users will not have a local password as they authenticate via Logto.
 // This model structure is flexible, but the password column will be null for Logto users.
 export default class User extends compose(BaseModel, AuthFinder) {
+  static selfAssignPrimaryKey = true
+  static rememberMeTokens = DbRememberMeTokensProvider.forModel(User)
+
   // Add a beforeCreate hook to generate UUIDs for SQLite
   @beforeCreate()
   static assignUuid(user: User) {

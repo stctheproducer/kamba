@@ -8,7 +8,6 @@ const lockConfig = defineConfig({
      * Database store to manage locks
      */
     database: stores.database({
-      connectionName: 'cache',
       tableName: 'locks',
     }),
 
