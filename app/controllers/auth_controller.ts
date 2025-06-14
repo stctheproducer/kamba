@@ -10,10 +10,10 @@ export default class AuthController {
     const logger = parentLogger.child({ context: 'AuthController.login' })
     logger.info('Initiating Logto login redirect')
     // Redirect user to Logto for authentication
-    inertia.location(await ally.use('logto').getRedirectUrl())
+    return inertia.location(await ally.use('logto').getRedirectUrl())
   }
 
-  async handleCallback({ ally, request, response, auth, logger: parentLogger }: HttpContext) {
+  async handleCallback({ ally, request, inertia, auth, logger: parentLogger }: HttpContext) {
     const instance = request.url()
     const logger = parentLogger.child({
       context: 'AuthController.handleCallback',
@@ -124,10 +124,10 @@ export default class AuthController {
     // Redirect the user to the desired page after login (e.g., the chat screen)
     // Assuming '/chat' is the route for the chat screen
     logger.info({ userId: user.id }, 'Redirecting user to chat screen')
-    response.redirect('/chat')
+    return inertia.render('chat/index')
   }
 
-  async logout({ auth, response, request, logger: parentLogger }: HttpContext) {
+  async logout({ auth, inertia, request, logger: parentLogger }: HttpContext) {
     const instance = request.url()
     const logger = parentLogger.child({
       context: 'AuthController.logout',
@@ -145,6 +145,6 @@ export default class AuthController {
     logger.info('User session ended, logged out')
 
     // Redirect to the homepage or login page
-    response.redirect('/')
+    return inertia.render('home')
   }
 }

@@ -63,22 +63,25 @@ export default class HttpExceptionHandler extends ExceptionHandler {
     }
 
     if (error instanceof authErrors.E_UNAUTHORIZED_ACCESS) {
-      const message = error.getResponseMessage(error, ctx)
-      const cause = error.cause as Record<string, string>
-      const code = error.code
+      if (ctx.request.is(['json'])) {
+        const message = error.getResponseMessage(error, ctx)
+        const cause = error.cause as Record<string, string>
+        const code = error.code
 
-      logger.warn({ error, cause, code }, message)
+        logger.warn({ error, cause, code }, message)
 
-      const unauthorizedException = new ProblemException(
-        'Unauthorized Access',
-        `https://httpstatuses.com/${error.status}`,
-        message,
-        ctx.request.url(),
-        error.status,
-        { requestId: ctx.request.id(), ...cause, code }
-      )
-      await unauthorizedException.handle(unauthorizedException, ctx)
-      return
+        const unauthorizedException = new ProblemException(
+          'Unauthorized Access',
+          `https://httpstatuses.com/${error.status}`,
+          message,
+          ctx.request.url(),
+          error.status,
+          { requestId: ctx.request.id(), ...cause, code }
+        )
+        await unauthorizedException.handle(unauthorizedException, ctx)
+        return
+      }
+      logger.debug({ error }, 'Unauthorized access but skipped!')
     }
 
     // If the error is an instance of ProblemException, we can handle it
