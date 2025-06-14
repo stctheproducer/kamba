@@ -1,4 +1,3 @@
-```markdown
 # Kamba
 
 > This project is my implementation of the [T3 Chat Cloneathon](https://cloneathon.t3.chat/)
@@ -186,11 +185,13 @@ node ace migration:run
 This project uses [dotenvx](https://dotenvx.com) for secure environment variable management. Here's how to use it:
 
 1. Install dotenvx CLI (if not already installed):
+
 ```bash
 curl -fsSL https://dotenvx.com/install.sh | bash
 ```
 
 2. Set up your environment files:
+
 ```bash
 # Development
 cp .env.example .env
@@ -203,6 +204,7 @@ cp .env.example .env.production
 ```
 
 3. Use dotenvx commands to manage your environment:
+
 ```bash
 # Set variables
 pnpm env:prod:set KEY=value
@@ -214,6 +216,7 @@ pnpm env:test:get KEY
 ```
 
 4. Run commands with dotenvx:
+
 ```bash
 # Development
 pnpm dev  # Uses dotenvx under the hood
@@ -227,22 +230,26 @@ pnpm start  # Uses dotenvx with production env
 You can run the application using Docker:
 
 1. Build the Docker image:
+
 ```bash
 pnpm docker:build
 ```
 
 2. Run the container:
+
 ```bash
 pnpm docker:run
 ```
 
 The Docker setup includes:
+
 - Volume mount for SQLite database files in `/app/tmp`
 - Built-in dotenvx support
 - Proper Node.js environment with pnpm
 - Production-ready configuration
 
 Note: When using Docker, make sure to:
+
 - Mount your environment files appropriately
 - Use the tmp volume for persistent database storage
 - Configure your environment variables through dotenvx
@@ -263,12 +270,12 @@ Here are some useful scripts from `package.json`:
 
 The application follows a service-oriented architecture.
 
--   **Frontend**: Built with React and InertiaJS, using Shadcn UI and Assistant-UI for components. It incorporates **LiveStore** to manage chat history and related user data locally in a browser-based SQLite instance, providing a fast "local-first" experience.
--   **Backend API**: An AdonisJS v6 application handling core logic, API endpoints, authentication integration (Logto), interactions with external services (AI providers, Cloudflare R2, Posthog, OpenMeter, Payment Gateways), and managing server-side data in **SQLite** files. It also hosts the **custom LiveStore sync provider** over **WebSockets** (`adonisjs-websocket`) to synchronize chat data with client LiveStore instances.
--   **Databases**:
-    *   **SQLite Files**: Stored on the server's file system for main application data (user info, BYOK keys, payments, logs), caching, and rate limiting state.
-    *   **Weaviate**: A dedicated vector database for storing and querying embeddings used in the RAG feature.
--   **External Services**: Integration with third-party platforms for authentication (Logto), AI models, object storage (Cloudflare R2), analytics (Posthog), background jobs (Trigger.dev - optional for certain chat generation tasks), usage tracking (OpenMeter), and payment processing.
+- **Frontend**: Built with React and InertiaJS, using Shadcn UI and Assistant-UI for components. It incorporates **LiveStore** to manage chat history and related user data locally in a browser-based SQLite instance, providing a fast "local-first" experience.
+- **Backend API**: An AdonisJS v6 application handling core logic, API endpoints, authentication integration (Logto), interactions with external services (AI providers, Cloudflare R2, Posthog, OpenMeter, Payment Gateways), and managing server-side data in **SQLite** files. It also hosts the **custom LiveStore sync provider** over **WebSockets** (`adonisjs-websocket`) to synchronize chat data with client LiveStore instances.
+- **Databases**:
+  - **SQLite Files**: Stored on the server's file system for main application data (user info, BYOK keys, payments, logs), caching, and rate limiting state.
+  - **Weaviate**: A dedicated vector database for storing and querying embeddings used in the RAG feature.
+- **External Services**: Integration with third-party platforms for authentication (Logto), AI models, object storage (Cloudflare R2), analytics (Posthog), background jobs (Trigger.dev - optional for certain chat generation tasks), usage tracking (OpenMeter), and payment processing.
 
 Data flow for chat history is primarily between the Frontend (LiveStore) and the Backend API (SQLite backup) via the WebSocket sync. Other data is managed directly by the Backend API in the server-side SQLite files or external services.
 
@@ -276,10 +283,10 @@ Data flow for chat history is primarily between the Frontend (LiveStore) and the
 
 Realtime features are handled using **WebSockets** via `adonisjs-websocket` and centered around **LiveStore**'s synchronization:
 
--   **WebSocket Server**: Hosted in the AdonisJS backend, handling authenticated client connections.
--   **LiveStore Sync Provider**: A custom implementation in the backend that synchronizes mutations between the client's LiveStore instance (in the browser) and the server's main SQLite database. It listens for client changes via WebSocket and pushes server-side changes (from other devices, background tasks, AI streaming) to connected clients.
--   **AI Response Streaming**: AI model responses are streamed chunk by chunk from the backend. These chunks are sent over the WebSocket sync to the client's LiveStore, which appends them to the local message record in real-time.
--   **Resumable Streams**: Since LiveStore manages the full message content locally as it streams, resuming a generation after a disconnection involves the client reconnecting the WebSocket. LiveStore's sync protocol, combined with the backend's knowledge of the message state (from the server-side SQLite backup), allows the sync provider to potentially resume sending any missing chunks or let LiveStore reconcile the state.
+- **WebSocket Server**: Hosted in the AdonisJS backend, handling authenticated client connections.
+- **LiveStore Sync Provider**: A custom implementation in the backend that synchronizes mutations between the client's LiveStore instance (in the browser) and the server's main SQLite database. It listens for client changes via WebSocket and pushes server-side changes (from other devices, background tasks, AI streaming) to connected clients.
+- **AI Response Streaming**: AI model responses are streamed chunk by chunk from the backend. These chunks are sent over the WebSocket sync to the client's LiveStore, which appends them to the local message record in real-time.
+- **Resumable Streams**: Since LiveStore manages the full message content locally as it streams, resuming a generation after a disconnection involves the client reconnecting the WebSocket. LiveStore's sync protocol, combined with the backend's knowledge of the message state (from the server-side SQLite backup), allows the sync provider to potentially resume sending any missing chunks or let LiveStore reconcile the state.
 
 ## Author
 
@@ -322,6 +329,7 @@ Our development workflow follows these principles:
 5. **CI/CD**: Automated testing and linting run on all PRs
 
 Before submitting your contribution, please ensure your code:
+
 - Passes all tests (`pnpm test`)
 - Has proper type definitions (`pnpm typecheck`)
 - Follows our linting rules (`pnpm lint`)
@@ -355,5 +363,3 @@ If you find a bug, please report it by creating an issue using our bug report te
 - Any relevant logs or screenshots
 
 For security vulnerabilities, please follow the instructions in our [SECURITY.md](SECURITY.md) file.
-```
-
