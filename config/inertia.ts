@@ -12,7 +12,8 @@ const inertiaConfig = defineConfig({
    * Data that should be shared with all rendered pages
    */
   sharedData: {
-    // user: (ctx) => ctx.inertia.always(() => ctx.auth.user),
+    user: (ctx) => ctx.inertia.always(() => ctx.auth.user),
+    isAuthenticated: (ctx) => ctx.inertia.always(() => ctx.auth.isAuthenticated),
     appName: env.get('APP_NAME', 'AdonisJS'),
   },
 

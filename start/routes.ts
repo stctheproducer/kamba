@@ -42,7 +42,6 @@ router
 const ChatsController = () => import('#controllers/chats_controller')
 router
   .group(() => {
-    // router.get('/', ({ inertia }) => inertia.render('chat')).as('chat')
     router.get('/', [ChatsController, 'index']).use(middleware.auth()).as('chat')
   })
   .prefix('chat')
@@ -53,7 +52,7 @@ router
     router
       .get('/token', ({ response }) => {
         // return ally.use('logto').getManagementApiToken()
-        response.ok('Ubuteko')
+        return response.ok('Ubuteko')
       })
       .as('logto.management.token')
   })
