@@ -63,7 +63,7 @@ export default class DatabasePragmaProvider {
       throw error
     }
 
-    logger.info('Finished configuring PRAGMS statements for all connections')
+    logger.info('Finished configuring PRAGMAs statements for all connections')
   }
 
   /**

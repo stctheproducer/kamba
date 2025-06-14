@@ -3,6 +3,8 @@ import { HttpContext, ExceptionHandler } from '@adonisjs/core/http'
 import { errors as limiterErrors } from '@adonisjs/limiter'
 import type { StatusPageRange, StatusPageRenderer } from '@adonisjs/core/types/http'
 import ProblemException from './problem_exception.js'
+import ServerErrorException from './server_error_exception.js'
+import { errors as authErrors } from '@adonisjs/auth'
 
 export default class HttpExceptionHandler extends ExceptionHandler {
   /**
@@ -41,7 +43,10 @@ export default class HttpExceptionHandler extends ExceptionHandler {
     if (error instanceof limiterErrors.E_TOO_MANY_REQUESTS) {
       const message = error.getResponseMessage(ctx)
       const headers = error.getDefaultHeaders()
-      logger.warn({ error, headers }, message)
+      const cause = error.cause as Record<string, string>
+      const code = error.code
+
+      logger.warn({ error, headers, cause, code }, message)
 
       Object.keys(headers).forEach((key) => ctx.response.header(key, headers[key]))
 
@@ -51,9 +56,28 @@ export default class HttpExceptionHandler extends ExceptionHandler {
         message,
         ctx.request.url(),
         error.status,
-        { requestId: ctx.request.id() }
+        { requestId: ctx.request.id(), ...cause, code }
       )
       await tooManyRequestsException.handle(tooManyRequestsException, ctx)
+      return
+    }
+
+    if (error instanceof authErrors.E_UNAUTHORIZED_ACCESS) {
+      const message = error.getResponseMessage(error, ctx)
+      const cause = error.cause as Record<string, string>
+      const code = error.code
+
+      logger.warn({ error, cause, code }, message)
+
+      const unauthorizedException = new ProblemException(
+        'Unauthorized Access',
+        `https://httpstatuses.com/${error.status}`,
+        message,
+        ctx.request.url(),
+        error.status,
+        { requestId: ctx.request.id(), ...cause, code }
+      )
+      await unauthorizedException.handle(unauthorizedException, ctx)
       return
     }
 
@@ -68,12 +92,9 @@ export default class HttpExceptionHandler extends ExceptionHandler {
       // Log the error
       logger.error({ error }, 'Unhandled exception occurred')
       // Optionally, you can report the error to a monitoring service here
-      const genericError = new ProblemException(
-        'Internal Server Error',
-        'https://httpstatuses.com/500',
+      const genericError = new ServerErrorException(
         'An unexpected error occurred. Please try again later.',
         ctx.request.url(),
-        500,
         { requestId: ctx.request.id() }
       )
       await genericError.handle(genericError, ctx)

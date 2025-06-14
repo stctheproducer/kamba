@@ -31,7 +31,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring cache package
   |----------------------------------------------------------
   */
-  CACHE_DRIVER: Env.schema.enum(['redis', 'database', 'memory'] as const),
+  CACHE_DRIVER: Env.schema.enum(['database', 'memory'] as const),
 
   /*
   |----------------------------------------------------------
@@ -70,7 +70,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring the limiter package
   |----------------------------------------------------------
   */
-  LIMITER_STORE: Env.schema.enum(['redis', 'database', 'memory'] as const),
+  LIMITER_STORE: Env.schema.enum(['database', 'memory'] as const),
 
   /*
   |----------------------------------------------------------
@@ -92,10 +92,6 @@ export default await Env.create(new URL('../', import.meta.url), {
   LOGTO_REDIRECT_URI: Env.schema.string({ format: 'url' }),
   LOGTO_ENDPOINT: Env.schema.string({ format: 'url' }),
 
-  REDIS_HOST: Env.schema.string.optional({ format: 'host' }),
-  REDIS_PORT: Env.schema.number.optional(),
-  REDIS_PASSWORD: Env.schema.string.optional(),
-
   TURNSTILE_SITE_KEY: Env.schema.string.optional(),
   TURNSTILE_SECRET: Env.schema.string.optional(),
   RECAPTCHA_SITE_KEY: Env.schema.string.optional(),
@@ -106,5 +102,5 @@ export default await Env.create(new URL('../', import.meta.url), {
   | Variables for configuring the lock package
   |----------------------------------------------------------
   */
-  LOCK_STORE: Env.schema.enum(['database', 'memory'] as const)
+  LOCK_STORE: Env.schema.enum(['database', 'memory'] as const),
 })

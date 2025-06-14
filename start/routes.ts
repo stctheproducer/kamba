@@ -23,12 +23,12 @@ transmit.registerRoutes((route) => {
   route.use(throttle)
 })
 
-router.on('/').renderInertia('home')
+router.on('/').renderInertia('home').as('home')
 
 const AuthController = () => import('#controllers/auth_controller')
 router
   .group(() => {
-    router.get('/login', ({ inertia }) => inertia.render('auth/login')).as('login')
+    router.on('/login').renderInertia('auth/login').as('login')
 
     router.get('/logto/redirect', [AuthController, 'login']).as('logto.redirect')
 
@@ -38,6 +38,15 @@ router
   })
   .prefix('auth')
   .as('auth')
+
+const ChatsController = () => import('#controllers/chats_controller')
+router
+  .group(() => {
+    // router.get('/', ({ inertia }) => inertia.render('chat')).as('chat')
+    router.get('/', [ChatsController, 'index']).use(middleware.auth()).as('chat')
+  })
+  .prefix('chat')
+  .as('chat')
 
 router
   .group(() => {
