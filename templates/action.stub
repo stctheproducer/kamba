@@ -1,0 +1,8 @@
+import { AsAction } from '@foadonis/actions'
+import {{ model }} from '#models/{{ modelPath }}'
+
+export default class {{ name }} implements AsAction {
+  handle({{ modelInstance }}: {{ model }}) {
+    // Your business logic here
+  }
+}

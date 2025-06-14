@@ -13,13 +13,22 @@ const limiterConfig = defineConfig({
      */
     redis: stores.redis({
       connectionName: 'limiter',
+      keyPrefix: 'limiter:',
+    }),
+
+    database: stores.database({
+      connectionName: 'limiter',
+      tableName: 'rate_limits',
+      keyPrefix: 'limiter:',
     }),
 
     /**
      * Memory store could be used during
      * testing
      */
-    memory: stores.memory({}),
+    memory: stores.memory({
+      keyPrefix: 'limiter:',
+    }),
   },
 })
 
