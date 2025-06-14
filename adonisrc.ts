@@ -36,6 +36,7 @@ export default defineConfig({
     () => import('@tuyau/core/commands'),
     () => import('@adonisjs/lucid/commands'),
     () => import('@adonisjs/mail/commands'),
+    () => import('@foadonis/actions/commands'),
   ],
 
   /*
@@ -81,6 +82,9 @@ export default defineConfig({
     () => import('@adonisjs/drive/drive_provider'),
     () => import('@adonisjs/lucid/database_provider'),
     () => import('@adonisjs/mail/mail_provider'),
+    () => import('@adonisjs/lock/lock_provider'),
+    () => import('adonis-lucid-soft-deletes/provider'),
+    () => import('#providers/database_pragma_provider')
   ],
 
   /*

@@ -33,18 +33,9 @@ const redisConfig = defineConfig({
       port: env.get('REDIS_PORT'),
       password: env.get('REDIS_PASSWORD', ''),
       db: 1,
-      keyPrefix: 'limiter:',
       retryStrategy(times) {
         return times > 10 ? null : times * 50
       },
-    },
-
-    transmit: {
-      host: env.get('REDIS_HOST'),
-      port: env.get('REDIS_PORT'),
-      password: env.get('REDIS_PASSWORD', ''),
-      db: 1,
-      keyPrefix: 'transmit:',
     },
   },
 })

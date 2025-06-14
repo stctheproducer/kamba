@@ -8,6 +8,21 @@
 */
 
 import router from '@adonisjs/core/services/router'
+import transmit from '@adonisjs/transmit/services/main'
+import { throttle } from './limiter.js'
+import { middleware } from './kernel.js'
+
+transmit.registerRoutes((route) => {
+  // Ensure you are authenticated to register your client
+  if (route.getPattern() === '__transmit/events') {
+    route.middleware(middleware.auth())
+    return
+  }
+
+  // Add a throttle middleware to other transmit routes
+  route.use(throttle)
+})
+
 router.on('/').renderInertia('home')
 
 const AuthController = () => import('#controllers/auth_controller')
