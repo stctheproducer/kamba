@@ -73,7 +73,7 @@ System(ai_chat_system, "AI Chat Application", "Provides an AI chat interface wit
 System(logto_auth, "Logto", "Handles user authentication.")
 System(ai_model_providers, "AI Model Providers", "External services providing various AI models (e.g., OpenAI, Anthropic, Google AI).")
 System(openrouter_api, "OpenRouter API", "Aggregates multiple AI models, specifically for BYOK users.")
-System(sqlite_databases, "SQLite Databases", "Stores user data, chat history, configurations, cache, and limiter state in multiple files.") # Represents tmp/main.sqlite, tmp/cache.sqlite, tmp/limiter.sqlite
+System(sqlite_databases, "SQLite Databases", "Stores user data, chat history, configurations, cache, and limiter state in multiple files.") # Represents tmp/app.sqlite, tmp/cache.sqlite, tmp/limiter.sqlite
 System(weaviate_db, "Weaviate", "Vector database used for RAG.")
 System(cloudflare_r2, "Cloudflare R2", "Object storage for uploaded files.")
 System(posthog_analytics, "Posthog", "Provides analytics, error tracking, and feature flags.")
@@ -251,9 +251,9 @@ erDiagram
     users ||--|{ audit_logs : "generates"
 ```
 
-The tables above represent the *logical* data model. In the implementation with SQLite, these tables will primarily reside in the `tmp/main.sqlite` file.
+The tables above represent the *logical* data model. In the implementation with SQLite, these tables will primarily reside in the `tmp/app.sqlite` file.
 
-#### users Table (tmp/main.sqlite)
+#### users Table (tmp/app.sqlite)
 
 | Column        | Type      | Description                         | Constraints            |
 | :------------ | :-------- | :---------------------------------- | :--------------------- |
@@ -266,7 +266,7 @@ The tables above represent the *logical* data model. In the implementation with 
 | is_beta_user  | BOOLEAN   | Flag for beta program participants  | Not Null, Default False |
 | is_paying_user| BOOLEAN   | Flag indicating active subscription | Not Null, Default False |
 
-#### chats Table (tmp/main.sqlite)
+#### chats Table (tmp/app.sqlite)
 
 | Column    | Type      | Description                 | Constraints   |
 | :-------- | :-------- | :-------------------------- | :------------ |
@@ -276,7 +276,7 @@ The tables above represent the *logical* data model. In the implementation with 
 | created_at| TIMESTAMP | Record creation timestamp   | Not Null      |
 | updated_at| TIMESTAMP | Record last update timestamp| Not Null      |
 
-#### messages Table (tmp/main.sqlite)
+#### messages Table (tmp/app.sqlite)
 
 | Column           | Type      | Description                                   | Constraints            |
 | :--------------- | :-------- | :-------------------------------------------- | :--------------------- |
@@ -291,7 +291,7 @@ The tables above represent the *logical* data model. In the implementation with 
 
 Note: While `chats` and `messages` are listed here for the server-side backup, the primary source and user interaction will be with the LiveStore instance in the browser. The server will need logic to sync changes from LiveStore into these backup tables and vice-versa for initial load or multi-device sync.
 
-#### files Table (tmp/main.sqlite)
+#### files Table (tmp/app.sqlite)
 
 | Column             | Type      | Description                             | Constraints         |
 | :----------------- | :-------- | :-------------------------------------- | :------------------ |
@@ -307,7 +307,7 @@ Note: While `chats` and `messages` are listed here for the server-side backup, t
 | created_at         | TIMESTAMP | Record creation timestamp               | Not Null            |
 | updated_at         | TIMESTAMP | Record last update timestamp            | Not Null            |
 
-#### models Table (tmp/main.sqlite)
+#### models Table (tmp/app.sqlite)
 
 | Column            | Type      | Description                                   | Constraints         |
 | :---------------- | :-------- | :-------------------------------------------- | :------------------ |
@@ -322,7 +322,7 @@ Note: While `chats` and `messages` are listed here for the server-side backup, t
 | created_at        | TIMESTAMP | Record creation timestamp                     | Not Null            |
 | updated_at        | TIMESTAMP | Record last update timestamp                  | Not Null            |
 
-#### user_models Table (tmp/main.sqlite)
+#### user_models Table (tmp/app.sqlite)
 
 | Column      | Type      | Description                                   | Constraints           |
 | :---------- | :-------- | :-------------------------------------------- | :-------------------- |
@@ -337,7 +337,7 @@ Note: While `chats` and `messages` are listed here for the server-side backup, t
 
 Note: The `api_key` field must be encrypted using `@adonijs/encryption` before storing and decrypted only when needed for API calls. Access to the decryption key should be highly restricted.
 
-#### payments Table (tmp/main.sqlite)
+#### payments Table (tmp/app.sqlite)
 
 | Column             | Type      | Description                           | Constraints         |
 | :----------------- | :-------- | :------------------------------------ | :------------------ |
@@ -352,7 +352,7 @@ Note: The `api_key` field must be encrypted using `@adonijs/encryption` before s
 | created_at         | TIMESTAMP | Record creation timestamp             | Not Null            |
 | updated_at         | TIMESTAMP | Record last update timestamp          | Not Null            |
 
-#### subscriptions Table (tmp/main.sqlite)
+#### subscriptions Table (tmp/app.sqlite)
 
 | Column              | Type      | Description                                   | Constraints    |
 | :------------------ | :-------- | :-------------------------------------------- | :------------- |
@@ -367,7 +367,7 @@ Note: The `api_key` field must be encrypted using `@adonijs/encryption` before s
 | created_at          | TIMESTAMP | Record creation timestamp                     | Not Null       |
 | updated_at          | TIMESTAMP | Record last update timestamp                  | Not Null       |
 
-#### activity_logs Table (tmp/main.sqlite)
+#### activity_logs Table (tmp/app.sqlite)
 
 | Column    | Type      | Description                         | Constraints  |
 | :-------- | :-------- | :---------------------------------- | :----------- |
@@ -379,7 +379,7 @@ Note: The `api_key` field must be encrypted using `@adonijs/encryption` before s
 
 Note: `user_id` is optional to log system activities not tied to a specific user.
 
-#### audit_logs Table (tmp/main.sqlite)
+#### audit_logs Table (tmp/app.sqlite)
 
 | Column    | Type      | Description                               | Constraints  |
 | :-------- | :-------- | :---------------------------------------- | :----------- |
@@ -412,7 +412,7 @@ title Container Diagram for AI Chat Application
 System_Boundary(ai_chat_system_boundary, "AI Chat Application")
     Container(frontend, "Frontend", "React, InertiaJS, Shadcn, Assistant-UI, LiveStore", "Provides the user interface and local-first data storage.")
     Container(backend_api, "Backend API", "AdonisJS v6", "Provides the application logic, API endpoints, and LiveStore sync provider.")
-    Container(sqlite_databases, "SQLite Databases", "SQLite files", "Stores application data, cache, and limiter state on the server filesystem.") # Represents tmp/main.sqlite, tmp/cache.sqlite, tmp/limiter.sqlite
+    Container(sqlite_databases, "SQLite Databases", "SQLite files", "Stores application data, cache, and limiter state on the server filesystem.") # Represents tmp/app.sqlite, tmp/cache.sqlite, tmp/limiter.sqlite
     Container(weaviate_container, "Weaviate Database", "Weaviate", "Stores vector embeddings for RAG.")
 System_Boundary(ai_chat_system_boundary)
 
@@ -550,7 +550,7 @@ The core of the realtime strategy now revolves around LiveStore's synchronizatio
     * **WebSocket Server (`adonisjs-websocket`):** Set up a WebSocket server. Authenticate incoming connections using the user's session or token.
     * **LiveStore Sync Provider:** Implement a custom LiveStore sync provider within your AdonisJS application. This provider acts as the bridge between the server's main SQLite database (for backup) and the client's LiveStore instance.
         * It will receive changes (mutations) from the client's LiveStore via the WebSocket.
-        * It will apply these changes to the server's main SQLite database (`tmp/main.sqlite`) using AdonisJS Lucid/Knex. You can leverage Lucid's query builders as planned.
+        * It will apply these changes to the server's main SQLite database (`tmp/app.sqlite`) using AdonisJS Lucid/Knex. You can leverage Lucid's query builders as planned.
         * It will receive changes originating from the server (e.g., background processing updating a message status, multi-device sync) and push these changes down to the connected client LiveStore instances via the WebSocket.
         * Handle conflicts according to LiveStore's conflict resolution strategy (client-wins or server-wins are common defaults, or implement custom logic).
         * Ensure data sent over the WebSocket is scoped to the authenticated user's data only.

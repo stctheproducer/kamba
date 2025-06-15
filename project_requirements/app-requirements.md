@@ -1,6 +1,6 @@
 # T3 Chat Clone App Requirements
 
-I want to create an AI chat application with an interface that looks like Claude, but with a Gumroad theme feel. I need the app to meet certain requirements.
+I want to create an AI chat application with an interface that looks like Claude. I need the app to meet certain requirements.
 
 - I am building it in AdonisJS v6 with InertiaJS v2 and React 19
 - I will make extensive use of @adonisjs/redis, @adonisjs/cache, @adonijs/events, adonis-auditing package, adonisjs-activitylog package, @adonisjs/logger, @adonijs/encryption, @adonisjs/lock, @adonisjs/drive, ai (from vercel), @ai-sdk, assistant-ui, shadcn, @adonisjs/ally, @adonisj/lucid, @foadonis/shopkeeper
