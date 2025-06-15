@@ -59,8 +59,6 @@ export default class DatabasePragmaProvider {
       logger.error({ error }, `Error configuring PRAGMAs for connection: ${limiterConnectionName}`)
       throw error
     }
-
-    logger.info('Finished configuring PRAGMAs statements for all connections')
   }
 
   /**
@@ -79,8 +77,6 @@ export default class DatabasePragmaProvider {
 
     // Run pragmas when app is ready
     this.app.ready(() => {
-      logger.info('App is ready! Running SQLite PRAGMA statements...')
-
       this.runPragmas(db, logger).catch((error) => {
         logger.error({ error }, 'Error running PRAGMA statements')
       })
