@@ -19,6 +19,10 @@ type AuthLogoutPost = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/auth_controller.ts').default['logout'], false>
 }
+type ChatGetHead = {
+  request: unknown
+  response: MakeTuyauResponse<import('../app/controllers/chats_controller.ts').default['index'], false>
+}
 export interface ApiDefinition {
   'auth': {
     'logto': {
@@ -41,12 +45,25 @@ export interface ApiDefinition {
       '$post': AuthLogoutPost;
     };
   };
+  'chat': {
+    '$url': {
+    };
+    '$get': ChatGetHead;
+    '$head': ChatGetHead;
+  };
 }
 const routes = [
   {
     params: ["*"],
     name: 'drive.fs.serve',
     path: '/uploads/*',
+    method: ["GET","HEAD"],
+    types: {} as unknown,
+  },
+  {
+    params: [],
+    name: 'home',
+    path: '/',
     method: ["GET","HEAD"],
     types: {} as unknown,
   },
@@ -77,6 +94,13 @@ const routes = [
     path: '/auth/logout',
     method: ["POST"],
     types: {} as AuthLogoutPost,
+  },
+  {
+    params: [],
+    name: 'chat.chat',
+    path: '/chat',
+    method: ["GET","HEAD"],
+    types: {} as ChatGetHead,
   },
   {
     params: [],
