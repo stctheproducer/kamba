@@ -15,6 +15,9 @@
       ],
       "#drivers/*": [
         "./app/drivers/*.js"
+      ],
+      "@/*": [
+        "./inertia/*"
       ]
     }
   },
