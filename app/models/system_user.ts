@@ -11,6 +11,8 @@ const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
 })
 
 export default class SystemUser extends compose(BaseModel, AuthFinder) {
+  static selfAssignPrimaryKey = true
+
   @beforeCreate()
   static assignUuid(user: SystemUser) {
     if (!user.id) {
