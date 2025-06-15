@@ -5,6 +5,8 @@ import User from './user.js'
 import { v7 as uuidv7 } from 'uuid'
 
 export default class Payment extends BaseModel {
+  static selfAssignPrimaryKey = true
+
   @beforeCreate()
   static assignUuid(payment: Payment) {
     if (!payment.id) {

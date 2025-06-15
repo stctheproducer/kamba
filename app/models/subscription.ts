@@ -5,6 +5,8 @@ import User from '#models/user'
 import { v7 as uuidv7 } from 'uuid'
 
 export default class Subscription extends BaseModel {
+  static selfAssignPrimaryKey = true
+
   @beforeCreate()
   static assignUuid(subscription: Subscription) {
     if (!subscription.id) {

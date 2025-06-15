@@ -25,7 +25,6 @@ export default class DatabasePragmaProvider {
       'PRAGMA default_transaction_mode=IMMEDIATE; -- Set transaction mode to IMMEDIATE',
     ]
 
-    logger.info(`Configuring PRAGMAs for connection: ${appConnectionName}`)
     let error: Error | null = null
 
     for await (const pragma of pragmas) {
@@ -37,7 +36,6 @@ export default class DatabasePragmaProvider {
       throw error
     }
 
-    logger.info(`Configuring PRAGMAs for connection: ${cacheConnectionName}`)
     error = null
     for await (const pragma of pragmas) {
       ;[, error] = await tryCatch(() => db.connection(cacheConnectionName).rawQuery(pragma))
@@ -53,7 +51,6 @@ export default class DatabasePragmaProvider {
       'PRAGMA mmap_size=268435456; -- Set mmap size to 256MB',
     ]
 
-    logger.info(`Configuring PRAGMAs for connection: ${limiterConnectionName}`)
     error = null
     for await (const pragma of pragmas) {
       ;[, error] = await tryCatch(() => db.connection(limiterConnectionName).rawQuery(pragma))
@@ -62,8 +59,6 @@ export default class DatabasePragmaProvider {
       logger.error({ error }, `Error configuring PRAGMAs for connection: ${limiterConnectionName}`)
       throw error
     }
-
-    logger.info('Finished configuring PRAGMS statements for all connections')
   }
 
   /**
@@ -82,8 +77,6 @@ export default class DatabasePragmaProvider {
 
     // Run pragmas when app is ready
     this.app.ready(() => {
-      logger.info('App is ready! Running SQLite PRAGMA statements...')
-
       this.runPragmas(db, logger).catch((error) => {
         logger.error({ error }, 'Error running PRAGMA statements')
       })

@@ -27,16 +27,15 @@ export default defineConfig({
   */
   commands: [
     () => import('@adonisjs/core/commands'),
-    // () => import('@adonisjs/lucid/commands'),
     () => import('@foadonis/maintenance/commands'),
     () => import('@adonisjs/cache/commands'),
-    // () => import('@adonisjs/mail/commands'),
     () => import('@jrmc/adonis-attachment/commands'),
-    // () => import('adonis-lucid-filter/commands'),
+    () => import('adonis-lucid-filter/commands'),
     () => import('@tuyau/core/commands'),
     () => import('@adonisjs/lucid/commands'),
     () => import('@adonisjs/mail/commands'),
     () => import('@foadonis/actions/commands'),
+    () => import('@adocasts.com/dto/commands')
   ],
 
   /*
@@ -62,19 +61,15 @@ export default defineConfig({
     () => import('@adonisjs/shield/shield_provider'),
     () => import('@adonisjs/static/static_provider'),
     () => import('@adonisjs/cors/cors_provider'),
-    // () => import('@adonisjs/lucid/database_provider'),
     () => import('@adonisjs/auth/auth_provider'),
     () => import('@adonisjs/inertia/inertia_provider'),
     () => import('@foadonis/maintenance/maintenance_provider'),
     () => import('@adonisjs/cache/cache_provider'),
-    // () => import('@adonisjs/mail/mail_provider'),
-    // () => import('@adonisjs/drive/drive_provider'),
     () => import('@adonisjs/transmit/transmit_provider'),
     () => import('@adonisjs/limiter/limiter_provider'),
     () => import('@adonisjs/ally/ally_provider'),
-    () => import('@adonisjs/redis/redis_provider'),
     () => import('@jrmc/adonis-attachment/attachment_provider'),
-    // () => import('adonis-lucid-filter/provider'),
+    () => import('adonis-lucid-filter/provider'),
     () => import('@stouder-io/adonis-auditing/auditing_provider'),
     () => import('@holoyan/adonisjs-activitylog/activity_log_provider'),
     () => import('adonis-captcha-guard/providers/captcha_provider'),
@@ -84,7 +79,7 @@ export default defineConfig({
     () => import('@adonisjs/mail/mail_provider'),
     () => import('@adonisjs/lock/lock_provider'),
     () => import('adonis-lucid-soft-deletes/provider'),
-    () => import('#providers/database_pragma_provider')
+    () => import('#providers/database_pragma_provider'),
   ],
 
   /*
