@@ -13,7 +13,7 @@ This project is currently in active development. Security updates will be applie
 We take the security of this application seriously. If you believe you've found a security vulnerability, please follow these steps:
 
 1. **Do not disclose the vulnerability publicly**
-2. **Email the details to <chanda@kamba.app>**
+2. **Email the details to <security@kamba.app>**
    - Include a detailed description of the vulnerability
    - Steps to reproduce the issue
    - Potential impact of the vulnerability

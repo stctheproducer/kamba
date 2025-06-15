@@ -13,13 +13,6 @@ const cacheConfig = defineConfig({
           connectionName: 'cache',
         })
       ),
-    redis: store()
-      .useL1Layer(drivers.memory())
-      .useL2Layer(
-        drivers.redis({
-          connectionName: 'main',
-        })
-      ),
   },
 })
 
