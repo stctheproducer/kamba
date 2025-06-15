@@ -13,7 +13,7 @@ This application provides a feature-rich AI chat experience with the flexibility
 ### Core Features
 
 - Multiple language models and providers with BYOK functionality
-- Browser-friendly interface with Claude-like UX and Gumroad theming
+- Browser-friendly interface
 - User authentication with local-first chat history synchronized with the server
 - Easy to try with premium features behind a paywall
 - Bring your own key with priority support for OpenRouter API keys
@@ -37,15 +37,15 @@ This application provides a feature-rich AI chat experience with the flexibility
 #### Phase 1: Core Authentication & User Management
 
 - ✅ Authentication with Logto
-- 🔄 User creation after login process
-- 🔄 Custom prompts for user presets
+- ✅ User creation after login process
+- ✅ Database schema for chats and messages (server-side SQLite backup)
+- 🔄 Basic chat UI implementation
+- 🔄 Integration with AI models via Vercel AI SDK
 
 #### Phase 2: Basic Chat Functionality
 
-- ⏳ Database schema for chats and messages (server-side SQLite backup)
-- ⏳ Basic chat UI implementation (Claude-like with Gumroad theme)
-- ⏳ Integration with AI models via Vercel AI SDK
 - ⏳ BYOK functionality with OpenRouter priority support
+- ⏳ Custom prompts for user presets
 - ⏳ LiveStore integration for local chat history
 
 #### Phase 3: Local-First & Sync
@@ -57,8 +57,8 @@ This application provides a feature-rich AI chat experience with the flexibility
 #### Phase 4: Core & Enhanced Features
 
 - ⏳ File uploads (images and PDFs) with Cloudflare R2
-- ⏳ RAG implementation with Weaviate
 - ⏳ Syntax highlighting for code
+- ⏳ RAG implementation with Weaviate
 - ⏳ Usage tracking with OpenMeter
 - ⏳ Paywall implementation with payment gateways
 
