@@ -4,6 +4,10 @@ on: [pull_request]
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   changeset:
     runs-on: ubuntu-latest
