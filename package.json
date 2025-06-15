@@ -30,6 +30,7 @@
     "changeset:empty": "changeset add --empty",
     "version": "changeset version",
     "release": "pnpm build && changeset publish",
+    "release:beta": "pnpm build && changeset publish --tag beta",
     "publish": "changeset publish",
     "email:dev": "email dev -d ./resources/emails",
     "email:build": "email build -d ./resources/emails",
