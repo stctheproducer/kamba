@@ -32,43 +32,7 @@ This application provides a feature-rich AI chat experience with the flexibility
 
 ## Project Status
 
-### Implementation Progress
-
-#### Phase 1: Core Authentication & User Management
-
-- ✅ Authentication with Logto
-- ✅ User creation after login process
-- ✅ Database schema for chats and messages (server-side SQLite backup)
-- 🔄 Basic chat UI implementation
-- 🔄 Integration with AI models via Vercel AI SDK
-
-#### Phase 2: Basic Chat Functionality
-
-- ⏳ BYOK functionality with OpenRouter priority support
-- ⏳ Custom prompts for user presets
-- ⏳ LiveStore integration for local chat history
-
-#### Phase 3: Local-First & Sync
-
-- ⏳ WebSocket server for LiveStore synchronization (`adonisjs-websocket`)
-- ⏳ Custom LiveStore sync provider implementation in AdonisJS
-- ⏳ Synchronization logic between client LiveStore and server SQLite
-
-#### Phase 4: Core & Enhanced Features
-
-- ⏳ File uploads (images and PDFs) with Cloudflare R2
-- ⏳ Syntax highlighting for code
-- ⏳ RAG implementation with Weaviate
-- ⏳ Usage tracking with OpenMeter
-- ⏳ Paywall implementation with payment gateways
-
-#### Phase 5: Advanced Features
-
-- ⏳ Chat branching
-- ⏳ Real-time web search
-- ⏳ AI-powered image generation
-- ⏳ Resumable streams (leveraging LiveStore state)
-- ⏳ Chat sharing
+For a detailed development roadmap and the current status of all features, please see our [Development Roadmap](project_requirements/roadmap.md).
 
 ## Technology Stack
 
@@ -97,22 +61,22 @@ graph TD
 
     %% Main System
     subgraph CHAT[AI Chat Application]
-        FE[Frontend\nReact + InertiaJS] <--> BE[Backend API\nAdonisJS]
-        FE <--> LS[LiveStore\nBrowser SQLite]
-        BE <--> SQL[(SQLite DB\nServer)]
+        FE[Frontend — React + InertiaJS] <--> BE[Backend API — AdonisJS]
+        FE <--> LS[LiveStore — Browser SQLite]
+        BE <--> SQL[(SQLite DB — Server)]
         BE <--> WS[WebSocket Server]
         LS <--> WS
     end
 
     %% External Systems
-    BE <--> AUTH[Logto\nAuthentication]
+    BE <--> AUTH[Logto — Authentication]
     BE <--> AI[AI Model Providers]
     BE <--> OR[OpenRouter API]
-    BE <--> VDB[(Weaviate\nVector DB)]
-    BE <--> R2[Cloudflare R2\nFile Storage]
-    BE <--> PH[Posthog\nAnalytics]
-    BE <--> TD[Trigger.dev\nBackground Jobs]
-    BE <--> OM[OpenMeter\nUsage Tracking]
+    BE <--> VDB[Weaviate — Vector DB]
+    BE <--> R2[Cloudflare R2 — File Storage]
+    BE <--> PH[Posthog — Analytics]
+    BE <--> TD[Trigger.dev — Background Jobs]
+    BE <--> OM[OpenMeter — Usage Tracking & Billing]
     BE <--> PG[Payment Gateways]
     BE <--> WEB[Web Search API]
 ```

@@ -15,6 +15,8 @@ const limiterConfig = defineConfig({
       connectionName: 'limiter',
       tableName: 'rate_limits',
       keyPrefix: 'limiter:',
+      execEvenly: true,
+      clearExpiredByTimeout: true,
     }),
 
     /**
