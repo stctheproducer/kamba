@@ -6,9 +6,26 @@ const shieldConfig = defineConfig({
    * to learn more
    */
   csp: {
-    enabled: false,
-    directives: {},
-    reportOnly: false,
+    enabled: true,
+    directives: {
+      defaultSrc: ['self'],
+      scriptSrc: ['self', 'https://cdnjs.cloudflare.com'],
+      styleSrc: ['self', 'https://cdnjs.cloudflare.com'],
+      imgSrc: ['self', 'data:'],
+      fontSrc: ['self'],
+      connectSrc: [
+        'self',
+        'https://api.openai.com',
+        'https://api.deepseek.com',
+        'https://api.perplexity.ai',
+        'https://api.anthropic.com',
+        'https://api.google.com',
+        'https://api.openrouter.com',
+      ],
+      frameSrc: ['self'],
+      reportUri: ['/csp-report'],
+    },
+    reportOnly: true,
   },
 
   /**

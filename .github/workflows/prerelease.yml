@@ -1,0 +1,71 @@
+name: 🧪 Beta Release
+
+# Trigger on pushes to the develop branch or release/* branches
+on:
+  push:
+    branches:
+      - develop
+      - 'release/*'
+
+# Ensure only one workflow runs at a time for the same branch
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+# Required permissions for changesets
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  beta-release:
+    name: Beta Release
+    # Skip on PRs from forks for security
+    if: github.event_name != 'pull_request' || (github.event.pull_request && github.event.pull_request.head.repo.full_name != github.repository)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Get pnpm store path
+        shell: bash
+        run: |
+          echo "PNPM_STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        id: cache-pnpm
+        with:
+          path: ${{ env.PNPM_STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Enter pre-release mode with beta tag
+      - name: Enter Pre-release Mode
+        run: pnpm changeset pre enter beta
+
+      # Create and publish beta release
+      - name: Create and Publish Beta Release
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: 'pnpm run version'
+          publish: 'pnpm run release:beta'
+          commit: 'chore(release): version packages [beta]'
+          title: 'chore(release): version packages [beta]'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
