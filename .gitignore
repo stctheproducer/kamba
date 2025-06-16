@@ -6,11 +6,13 @@ tmp
 # Secrets
 .env*
 !.env.vault
-!.env.production
 !.env.development
 !.env.ci
 !.env.testing
 !.env.staging
+
+# Project requirements (sensitive)
+project_requirements/
 
 # Frontend assets compiled code
 public/assets
