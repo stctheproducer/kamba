@@ -22,6 +22,7 @@ const viteBackendConfig = defineConfig({
 
   scriptAttributes: {
     defer: true,
+    async: true,
   },
 })
 

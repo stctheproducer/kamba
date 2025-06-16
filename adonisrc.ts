@@ -35,7 +35,8 @@ export default defineConfig({
     () => import('@adonisjs/lucid/commands'),
     () => import('@adonisjs/mail/commands'),
     () => import('@foadonis/actions/commands'),
-    () => import('@adocasts.com/dto/commands')
+    () => import('@adocasts.com/dto/commands'),
+    () => import('@adonisjs/bouncer/commands')
   ],
 
   /*
@@ -80,6 +81,8 @@ export default defineConfig({
     () => import('@adonisjs/lock/lock_provider'),
     () => import('adonis-lucid-soft-deletes/provider'),
     () => import('#providers/database_pragma_provider'),
+    () => import('#providers/usage_service_provider'),
+    () => import('@adonisjs/bouncer/bouncer_provider')
   ],
 
   /*

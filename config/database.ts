@@ -16,6 +16,7 @@ const dbConfig = defineConfig({
       migrations: {
         naturalSort: true,
         paths: ['database/migrations'],
+        disableRollbacksInProduction: true,
       },
       pool: {
         max: 1,
