@@ -1,4 +1,4 @@
-# kamba
+# Kamba
 
 > This project is my implementation of the [T3 Chat Cloneathon](https://cloneathon.t3.chat/)
 
@@ -44,7 +44,7 @@ For a detailed development roadmap and the current status of all features, pleas
   - **Logto**: A complete authentication solution with enterprise-grade security features
   - **GitHub OAuth**: Quick and easy sign-in using your GitHub account
 
-  You can choose either authentication method during the sign-up process. Both options provide secure access to all of kamba's features.
+  You can choose either authentication method during the sign-up process. Both options provide secure access to all of Kamba's features.
 - **Storage**: Cloudflare R2
 - **Caching**: SQLite (via `@adonisjs/cache`)
 - **Rate Limiting**: SQLite (via `@adonisjs/limiter`)
@@ -285,7 +285,7 @@ For information about security policies and reporting vulnerabilities, please se
 
 ## Contributing
 
-Contributions to kamba are welcome and appreciated! Whether you're fixing bugs, adding features, improving documentation, or spreading the word, your help makes this project better.
+Contributions to Kamba are welcome and appreciated! Whether you're fixing bugs, adding features, improving documentation, or spreading the word, your help makes this project better.
 
 ### How to Contribute
 
@@ -318,7 +318,7 @@ Before submitting your contribution, please ensure your code:
 
 ## Community
 
-Join our community to get help, share ideas, or contribute to kamba's development!
+Join our community to get help, share ideas, or contribute to Kamba's development!
 
 ### Support Channels
 
@@ -328,7 +328,7 @@ Join our community to get help, share ideas, or contribute to kamba's developmen
 
 ### Getting Help
 
-If you need help with using kamba or implementing a feature:
+If you need help with using Kamba or implementing a feature:
 
 1. Check the [documentation](https://github.com/stctheproducer/kamba/wiki) (coming soon)
 2. Search for similar questions in [GitHub Discussions](https://github.com/stctheproducer/kamba/discussions)
