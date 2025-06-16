@@ -77,9 +77,12 @@ export default class DatabasePragmaProvider {
 
     // Run pragmas when app is ready
     this.app.ready(() => {
-      this.runPragmas(db, logger).catch((error) => {
-        logger.error({ error }, 'Error running PRAGMA statements')
-      })
+      logger.debug('Executing PRAGMA statements...')
+      this.runPragmas(db, logger)
+        .catch((error) => {
+          logger.error({ error }, 'Error running PRAGMA statements')
+        })
+        .finally(() => logger.debug('Finished executing PRAGMA statements'))
     })
   }
 

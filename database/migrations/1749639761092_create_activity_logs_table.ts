@@ -21,8 +21,8 @@ export default class extends BaseSchema {
       table.index(['model_type', 'model_id'])
       table.index(['entity_type', 'entity_id'])
 
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.timestamp('created_at', { useTz: true }).notNullable()
+      table.timestamp('updated_at', { useTz: true }).notNullable()
     })
   }
 

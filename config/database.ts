@@ -10,7 +10,7 @@ const dbConfig = defineConfig({
       client: 'better-sqlite3',
       useNullAsDefault: true,
       connection: {
-        filename: app.tmpPath(env.get('DB_FILE')),
+        filename: app.tmpPath(env.get('DB_FILE', 'app.sqlite')),
         debug: env.get('LOG_LEVEL') === 'debug',
       },
       migrations: {
@@ -26,7 +26,7 @@ const dbConfig = defineConfig({
       client: 'better-sqlite3',
       useNullAsDefault: true,
       connection: {
-        filename: app.tmpPath(env.get('DB_FILE')),
+        filename: app.tmpPath(env.get('DB_FILE', 'app.sqlite')),
         mode: 'readonly',
         debug: env.get('LOG_LEVEL') === 'debug',
       },
@@ -38,7 +38,7 @@ const dbConfig = defineConfig({
       client: 'better-sqlite3',
       useNullAsDefault: true,
       connection: {
-        filename: app.tmpPath(env.get('CACHE_DB_FILE')),
+        filename: app.tmpPath(env.get('CACHE_DB_FILE', 'cache.sqlite')),
         debug: env.get('LOG_LEVEL') === 'debug',
       },
     },
@@ -46,7 +46,7 @@ const dbConfig = defineConfig({
       client: 'better-sqlite3',
       useNullAsDefault: true,
       connection: {
-        filename: app.tmpPath(env.get('LIMITER_DB_FILE')),
+        filename: app.tmpPath(env.get('LIMITER_DB_FILE', 'limiter.sqlite')),
         debug: env.get('LOG_LEVEL') === 'debug',
       },
     },

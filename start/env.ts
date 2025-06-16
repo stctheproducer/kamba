@@ -134,6 +134,10 @@ export default await Env.create(new URL('../', import.meta.url), {
   }),
   GITHUB_CLIENT_ID: Env.schema.string.optionalWhen(process.env.OAUTH_PROVIDER === 'logto'),
   GITHUB_CLIENT_SECRET: Env.schema.string.optionalWhen(process.env.OAUTH_PROVIDER === 'logto'),
+  GITHUB_REDIRECT_URI: Env.schema.string.optionalWhen(process.env.OAUTH_PROVIDER === 'logto', {
+    message: 'Invalid GitHub redirect URI',
+    format: 'url',
+  }),
   LOGTO_CLIENT_ID: Env.schema.string.optionalWhen(process.env.OAUTH_PROVIDER === 'github'),
   LOGTO_CLIENT_SECRET: Env.schema.string.optionalWhen(process.env.OAUTH_PROVIDER === 'github'),
   LOGTO_REDIRECT_URI: Env.schema.string.optionalWhen(process.env.OAUTH_PROVIDER === 'github', {
@@ -154,6 +158,4 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
   LOCK_STORE: Env.schema.enum(['database', 'memory'] as const),
-
-  GITHUB_REDIRECT_URI: Env.schema.string()
 })

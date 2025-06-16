@@ -9,9 +9,17 @@ export default class AuthController {
   async login({ ally, request, inertia, logger: parentLogger }: HttpContext) {
     const logger = parentLogger.child({ context: 'AuthController.login' })
     logger.info('Initiating OAuth login redirect')
-    const provider = request.param('provider') as 'logto' | 'github'
+    const provider = request.param('provider')
+
+    if (!['logto', 'github'].includes(provider)) {
+      logger.warn({ provider }, 'Unsupported OAuth provider requested')
+      throw new UnauthorizedException('Unsupported OAuth provider')
+    }
+
+    // provider is now safely typed as the allowed union
+    const typedProvider = provider as 'logto' | 'github'
     // Redirect user to Logto for authentication
-    return inertia.location(await ally.use(provider).getRedirectUrl())
+    return inertia.location(await ally.use(typedProvider).getRedirectUrl())
   }
 
   async handleCallback({ ally, request, inertia, auth, logger: parentLogger }: HttpContext) {
@@ -49,6 +57,18 @@ export default class AuthController {
       })
     }
 
+    // Check if email is available in the OAuth user data
+    if (!oauthUser.email) {
+      logger.error(
+        { oauthUserId: oauthUser.id },
+        'Email is required but not provided by OAuth provider'
+      )
+      throw new UnauthorizedException(
+        'Email permission is required. Please grant access to your email address to continue.',
+        instance
+      )
+    }
+
     logger.debug(
       { oauthUserId: oauthUser.id, email: oauthUser.email },
       'Successfully retrieved OAuth user'
@@ -66,8 +86,10 @@ export default class AuthController {
         userRecord = new User()
         // userRecord.id = uuidv7() // Generate UUID for SQLite
         userRecord.oauthId = oauthUser.id
-        userRecord.email = oauthUser.email!
-        userRecord.username = oauthUser.nickName || oauthUser.email!.split('@')[0] // Basic username generation
+        userRecord.email = oauthUser.email
+        userRecord.username =
+          oauthUser.nickName ??
+          (oauthUser.email ? oauthUser.email.split('@')[0] : `user_${Date.now()}`)
         // userRecord.isBetaUser = false // Default status
         // userRecord.isPayingUser = false // Default status
 

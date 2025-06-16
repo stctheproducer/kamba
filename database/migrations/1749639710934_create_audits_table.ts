@@ -20,8 +20,8 @@ export default class extends BaseSchema {
 
       table.jsonb('metadata').nullable()
 
-      table.timestamp('created_at')
-      table.timestamp('updated_at')
+      table.timestamp('created_at', { useTz: true }).notNullable()
+      table.timestamp('updated_at', { useTz: true }).notNullable()
     })
   }
 
