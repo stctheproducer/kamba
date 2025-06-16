@@ -78,7 +78,7 @@
     "@japa/runner": "^4.2.0",
     "@swc/core": "1.12.1",
     "@trigger.dev/build": "^3.3.17",
-    "@tuyau/utils": "^0.0.7",
+    "@tuyau/utils": "^0.0.8",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/luxon": "^3.6.2",
     "@types/node": "^22.15.18",
