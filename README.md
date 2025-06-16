@@ -1,4 +1,4 @@
-# Kamba
+# kamba
 
 > This project is my implementation of the [T3 Chat Cloneathon](https://cloneathon.t3.chat/)
 
@@ -32,7 +32,7 @@ This application provides a feature-rich AI chat experience with the flexibility
 
 ## Project Status
 
-For a detailed development roadmap and the current status of all features, please see our [Development Roadmap](project_requirements/roadmap.md).
+For a detailed development roadmap and the current status of all features, please see the [GitHub Project](https://github.com/users/stctheproducer/projects/1).
 
 ## Technology Stack
 
@@ -40,7 +40,11 @@ For a detailed development roadmap and the current status of all features, pleas
 - **Frontend**: InertiaJS v2, React 19, Shadcn UI, Assistant-UI
 - **Database**: SQLite (main data, cache, limiter), Weaviate (vector DB)
 - **Local-First Storage & Sync**: LiveStore, `adonisjs-websocket`
-- **Authentication**: Logto
+- **Authentication**:
+  - **Logto**: A complete authentication solution with enterprise-grade security features
+  - **GitHub OAuth**: Quick and easy sign-in using your GitHub account
+
+  You can choose either authentication method during the sign-up process. Both options provide secure access to all of kamba's features.
 - **Storage**: Cloudflare R2
 - **Caching**: SQLite (via `@adonisjs/cache`)
 - **Rate Limiting**: SQLite (via `@adonisjs/limiter`)
@@ -69,7 +73,7 @@ graph TD
     end
 
     %% External Systems
-    BE <--> AUTH[Logto — Authentication]
+    BE <--> AUTH[Logto/GitHub OAuth — Authentication]
     BE <--> AI[AI Model Providers]
     BE <--> OR[OpenRouter API]
     BE <--> VDB[Weaviate — Vector DB]
@@ -96,7 +100,9 @@ graph TD
 - **SQLite Database**: Server-side storage for user data, chat backups, and application state.
 
 - **External Services**:
+  - **Authentication Providers**:
   - **Logto**: Handles user authentication and identity management
+  - **GitHub OAuth**: Provides social authentication via GitHub
   - **AI Model Providers**: Services like OpenAI, Anthropic, etc. that provide the AI models
   - **OpenRouter API**: Aggregates multiple AI models with BYOK support
   - **Weaviate**: Vector database for RAG (Retrieval-Augmented Generation)
@@ -111,7 +117,8 @@ graph TD
 
 ### Prerequisites
 
-- Node.js 20+
+- Node.js 22+
+- SQLite 3.36.0+
 - Weaviate instance (for RAG features)
 - Cloudflare R2 account (for file storage)
 
@@ -121,6 +128,7 @@ graph TD
 
 ```bash
 git clone https://github.com/stctheproducer/kamba.git
+git switch main # The default branch is develop
 cd kamba
 ```
 
@@ -138,7 +146,13 @@ cp .env.example .env
 
 Edit the `.env` file with your configuration details, including paths for the SQLite files and external service credentials.
 
-4. Run database migrations (for server-side SQLite)
+4. Generate the projects `APP_KEY` secret using the following command
+
+```bash
+node ace key:generate
+```
+
+5. Run database migrations (for server-side SQLite)
 
 ```bash
 node ace migration:run
@@ -188,6 +202,9 @@ pnpm dev  # Uses dotenvx under the hood
 # Production
 pnpm start  # Uses dotenvx with production env
 ```
+
+!!! note
+    Using dotenvx is optional but recommended for secure environment variable management. You may opt to use other methods if preferred.
 
 ### Docker Support
 
@@ -268,7 +285,7 @@ For information about security policies and reporting vulnerabilities, please se
 
 ## Contributing
 
-Contributions to Kamba are welcome and appreciated! Whether you're fixing bugs, adding features, improving documentation, or spreading the word, your help makes this project better.
+Contributions to kamba are welcome and appreciated! Whether you're fixing bugs, adding features, improving documentation, or spreading the word, your help makes this project better.
 
 ### How to Contribute
 
@@ -301,7 +318,7 @@ Before submitting your contribution, please ensure your code:
 
 ## Community
 
-Join our community to get help, share ideas, or contribute to Kamba's development!
+Join our community to get help, share ideas, or contribute to kamba's development!
 
 ### Support Channels
 
@@ -311,7 +328,7 @@ Join our community to get help, share ideas, or contribute to Kamba's developmen
 
 ### Getting Help
 
-If you need help with using Kamba or implementing a feature:
+If you need help with using kamba or implementing a feature:
 
 1. Check the [documentation](https://github.com/stctheproducer/kamba/wiki) (coming soon)
 2. Search for similar questions in [GitHub Discussions](https://github.com/stctheproducer/kamba/discussions)

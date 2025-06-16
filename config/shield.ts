@@ -6,7 +6,8 @@ const shieldConfig = defineConfig({
    * to learn more
    */
   csp: {
-    enabled: true,
+    // enabled: true,
+    enabled: false,
     directives: {
       defaultSrc: ['self'],
       scriptSrc: ['self', 'https://cdnjs.cloudflare.com'],

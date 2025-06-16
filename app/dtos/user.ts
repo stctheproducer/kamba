@@ -31,7 +31,7 @@ export default class UserDto extends BaseModelDto {
     this.middleName = user.middleName
     this.lastName = user.lastName
     this.password = user.password
-    this.logtoId = user.logtoId
+    this.logtoId = user.oauthId
     this.username = user.username
     this.isBetaUser = user.isBetaUser
     this.isPayingUser = user.isPayingUser
