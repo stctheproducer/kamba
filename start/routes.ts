@@ -47,6 +47,24 @@ router
   .prefix('chat')
   .as('chat')
 
+// API routes for chats and messages
+router
+  .group(() => {
+    router
+      .post('/chats', [ChatsController, 'store'])
+      .use(middleware.auth())
+      .use(middleware.reportUsage({ event: 'chats.created' }))
+      .as('chats.store')
+
+    router
+      .post('/chats/:id/messages', [ChatsController, 'storeMessage'])
+      .use(middleware.auth())
+      .use(middleware.reportUsage({ event: 'messages.created' }))
+      .as('chats.messages.store')
+  })
+  .prefix('api')
+  .as('api')
+
 router
   .group(() => {
     router
