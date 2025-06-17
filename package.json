@@ -138,7 +138,7 @@
     "@radix-ui/react-navigation-menu": "^1.2.13",
     "@radix-ui/react-scroll-area": "^1.2.9",
     "@radix-ui/react-slot": "^1.2.3",
-    "@react-email/components": "0.0.42",
+    "@react-email/components": "0.1.0",
     "@react-email/render": "1.1.2",
     "@stouder-io/adonis-auditing": "^1.1.8",
     "@tailwindcss/vite": "^4.1.9",
