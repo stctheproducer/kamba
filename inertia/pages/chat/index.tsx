@@ -9,7 +9,7 @@ import { ChatSidebar } from "@/components/chat-sidebar"
 import { Bot, Menu, Settings, Share2, Paperclip, Send, ImageIcon, Search, User, Copy, RotateCcw, Trash2, GitFork } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { ModelSelector } from "@/components/model-selector"
-import type { CustomPrompt } from "@/types/prompt-types"
+import type { CustomPrompt } from "@/types/prompt_types"
 import ChatLayout from "@/layouts/chat"
 
 interface Conversation {
@@ -59,6 +59,14 @@ export default function Chat() {
   ])
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null)
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    // Load sidebar state from localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('sidebar-collapsed')
+      return saved ? JSON.parse(saved) : false
+    }
+    return false
+  })
 
   useEffect(() => {
     const transmit = new Transmit({
@@ -203,6 +211,29 @@ export default function Chat() {
     }
   }, [streamingMessage, subscription.current])
 
+  // Handle sidebar collapse toggle
+  const handleToggleSidebarCollapse = () => {
+    const newCollapsed = !isSidebarCollapsed
+    setIsSidebarCollapsed(newCollapsed)
+    // Save to localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sidebar-collapsed', JSON.stringify(newCollapsed))
+    }
+  }
+
+  // Auto-collapse sidebar on mobile
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsSidebarCollapsed(true)
+      }
+    }
+
+    handleResize() // Check on mount
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   return (
     <ChatLayout>
       <Head title="Chat - Kamba" />
@@ -216,6 +247,8 @@ export default function Chat() {
           onNewChatWithPrompt={handleNewChatWithPrompt}
           onNewChat={handleNewChat}
           userPlan="free"
+          isCollapsed={isSidebarCollapsed}
+          onToggleCollapse={handleToggleSidebarCollapse}
         />
       </div>
 
@@ -283,121 +316,128 @@ export default function Chat() {
               )}
 
               {messages.map((message) => (
-                <div key={message.id} className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  {message.role === 'assistant' && (
-                    <div className="flex-shrink-0">
-                      <Bot className="h-8 w-8 p-1.5 bg-zinc-800 rounded-full text-primary" />
-                    </div>
-                  )}
-
-                  <div className={`max-w-[80%] ${message.role === 'user' ? 'order-1' : ''}`}>
-                    <div className={`p-3 rounded-lg ${message.role === 'user'
-                      ? 'bg-primary text-primary-foreground ml-12'
-                      : 'bg-zinc-800 text-white mr-12'
-                      }`}>
-                      <div className="text-sm whitespace-pre-wrap">{message.content}</div>
-                    </div>
-
-                    {/* Action buttons and timestamp */}
-                    <div className="flex items-center justify-between mt-1 px-1">
-                      <div className="flex items-center gap-1">
-                        <TooltipProvider delayDuration={100}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-6 w-6 p-0 hover:bg-zinc-700"
-                                onClick={() => handleCopyMessage(message.content)}
-                              >
-                                <Copy className="h-3 w-3" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Copy message</TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-
-                        {message.role === 'assistant' && (
-                          <TooltipProvider delayDuration={100}>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-6 w-6 p-0 hover:bg-zinc-700"
-                                  onClick={() => handleRegenerateMessage(message.id)}
-                                >
-                                  <RotateCcw className="h-3 w-3" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>Regenerate</TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        )}
-
-                        <TooltipProvider delayDuration={100}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-6 w-6 p-0 hover:bg-zinc-700"
-                                onClick={() => handleDeleteMessage(message.id)}
-                              >
-                                <Trash2 className="h-3 w-3" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Delete message</TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-
-                        <TooltipProvider delayDuration={100}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="h-6 w-6 p-0 hover:bg-zinc-700"
-                                onClick={() => handleBranchMessage(message.id)}
-                              >
-                                <GitFork className="h-3 w-3" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Branch conversation</TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                <div key={message.id} className="space-y-2 group">
+                  <div className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    {message.role === 'assistant' && (
+                      <div className="flex-shrink-0 mr-3">
+                        <Bot className="h-8 w-8 p-1.5 bg-zinc-800 rounded-full text-primary" />
                       </div>
+                    )}
 
-                      <span className="text-xs text-zinc-500">
+                    <div className={`max-w-[80%] group`}>
+                      <div className={`p-3 rounded-lg ${message.role === 'user'
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-zinc-800 text-white'
+                        }`}>
+                        <div className="text-sm whitespace-pre-wrap">{message.content}</div>
+                      </div>
+                    </div>
+
+                    {message.role === 'user' && (
+                      <div className="flex-shrink-0 ml-3">
+                        <User className="h-8 w-8 p-1.5 bg-primary rounded-full text-primary-foreground" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Action buttons and timestamp positioned below the bubble */}
+                  <div className={`flex ${message.role === 'user' ? 'justify-end pr-11' : 'justify-start pl-11'} group`}>
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <TooltipProvider delayDuration={100}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 hover:bg-zinc-700/50 text-zinc-400 hover:text-zinc-200"
+                              onClick={() => handleCopyMessage(message.content)}
+                            >
+                              <Copy className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent side="bottom">
+                            Copy message
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      {message.role === 'assistant' && (
+                        <TooltipProvider delayDuration={100}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 hover:bg-zinc-700/50 text-zinc-400 hover:text-zinc-200"
+                                onClick={() => handleRegenerateMessage(message.id)}
+                              >
+                                <RotateCcw className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent side="bottom">Regenerate</TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      )}
+
+                      <TooltipProvider delayDuration={100}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 hover:bg-zinc-700/50 text-zinc-400 hover:text-zinc-200"
+                              onClick={() => handleDeleteMessage(message.id)}
+                            >
+                              <Trash2 className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent side="bottom">
+                            Delete message
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      <TooltipProvider delayDuration={100}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 hover:bg-zinc-700/50 text-zinc-400 hover:text-zinc-200"
+                              onClick={() => handleBranchMessage(message.id)}
+                            >
+                              <GitFork className="h-3 w-3" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent side="bottom">
+                            Branch conversation
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+
+                      {/* Timestamp */}
+                      <span className="text-xs text-zinc-500 ml-2">
                         {formatTimestamp(message.timestamp)}
                       </span>
                     </div>
                   </div>
-
-                  {message.role === 'user' && (
-                    <div className="flex-shrink-0">
-                      <User className="h-8 w-8 p-1.5 bg-primary rounded-full text-primary-foreground" />
-                    </div>
-                  )}
                 </div>
               ))}
 
               {streamingMessage && (
-                <div className="flex gap-3 justify-start">
-                  <div className="flex-shrink-0">
+                <div className="flex justify-start">
+                  <div className="flex-shrink-0 mr-3">
                     <Bot className="h-8 w-8 p-1.5 bg-zinc-800 rounded-full text-primary animate-pulse" />
                   </div>
 
-                  <div className="max-w-[80%]">
-                    <div className="p-3 rounded-lg bg-zinc-800 text-white mr-12">
+                  <div className="max-w-[80%] relative group">
+                    <div className="p-3 rounded-lg bg-zinc-800 text-white">
                       <div className="text-sm whitespace-pre-wrap">{streamingMessage}</div>
                     </div>
 
-                    <div className="flex items-center justify-between mt-1 px-1">
-                      <div className="flex items-center gap-1">
-                        <span className="text-xs text-zinc-500">Generating...</span>
-                      </div>
-                      <span className="text-xs text-zinc-500">
+                    <div className="absolute bottom-2 left-2 flex flex-col items-start gap-1">
+                      <span className="text-xs text-zinc-500">Generating...</span>
+                      <span className="text-xs text-zinc-500 opacity-70">
                         {formatTimestamp(new Date())}
                       </span>
                     </div>

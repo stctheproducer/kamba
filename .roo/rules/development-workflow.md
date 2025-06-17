@@ -37,4 +37,5 @@
 
 ## Commandline Tools
 
-- Node.js global binaries are in $HOME/.volta/bin/
+- Volta is used to manage Node.js, npm, and pnpm versions
+- This project uses pnpm and the binaries are in $HOME/.volta/bin/

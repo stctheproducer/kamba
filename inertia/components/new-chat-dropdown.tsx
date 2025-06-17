@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { PlusCircle, ChevronDown, Search, Zap, MessageSquare } from "lucide-react"
-import type { CustomPrompt } from "@/types/prompt-types"
+import type { CustomPrompt } from "@/types/prompt_types"
 import { Badge } from "@/components/ui/badge"
 
 interface NewChatDropdownProps {
@@ -101,14 +101,14 @@ export function NewChatDropdown({
         align="start"
         style={{ maxHeight: dropdownHeight, overflow: "hidden" }}
       >
-        <DropdownMenuLabel className="flex items-center gap-2">
+        <DropdownMenuLabel className="flex items-center gap-2 text-white">
           <MessageSquare className="h-4 w-4" />
           Start New Chat
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-zinc-700" />
 
         <div className="p-2">
-          <Button onClick={handleNewChat} variant="ghost" className="w-full justify-start gap-2">
+          <Button onClick={handleNewChat} variant="ghost" className="w-full justify-start gap-2 text-white hover:bg-zinc-800 hover:text-white">
             <PlusCircle className="h-4 w-4" />
             Blank Chat
           </Button>
@@ -119,21 +119,24 @@ export function NewChatDropdown({
             <DropdownMenuSeparator className="bg-zinc-700" />
             <div className="p-2 space-y-2">
               <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-zinc-400" />
+                <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
                 <Input
                   placeholder="Search prompts..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-8 bg-zinc-800 border-zinc-700 h-9"
+                  className="pl-9 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-400 focus:border-primary focus:ring-2 focus:ring-primary/20 h-11"
                 />
               </div>
 
               {allCategories.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   <Button
-                    variant={selectedCategory === null ? "secondary" : "outline"}
+                    variant={selectedCategory === null ? "default" : "outline"}
                     size="sm"
-                    className="h-7 text-xs"
+                    className={`h-7 text-xs ${selectedCategory === null
+                      ? "bg-white text-black hover:bg-white/90"
+                      : "border-zinc-600 text-zinc-300 bg-zinc-700 hover:text-white"
+                      }`}
                     onClick={() => setSelectedCategory(null)}
                   >
                     All
@@ -141,9 +144,12 @@ export function NewChatDropdown({
                   {allCategories.map((category) => (
                     <Button
                       key={category}
-                      variant={selectedCategory === category ? "secondary" : "outline"}
+                      variant={selectedCategory === category ? "default" : "outline"}
                       size="sm"
-                      className="h-7 text-xs"
+                      className={`h-7 text-xs ${selectedCategory === category
+                        ? "bg-white text-black hover:bg-white/90"
+                        : "border-zinc-600 text-zinc-300 bg-zinc-700 hover:text-white"
+                        }`}
                       onClick={() => setSelectedCategory(category === selectedCategory ? null : category)}
                     >
                       {category}
@@ -159,7 +165,7 @@ export function NewChatDropdown({
           {/* Admin Prompts */}
           {filteredAdminPrompts.length > 0 && (
             <>
-              <DropdownMenuLabel className="flex items-center gap-2 text-xs text-zinc-300">
+              <DropdownMenuLabel className="flex items-center gap-2 text-xs text-white">
                 <Zap className="h-3 w-3" />
                 Admin Recommended
               </DropdownMenuLabel>
@@ -167,12 +173,12 @@ export function NewChatDropdown({
                 <DropdownMenuItem
                   key={prompt.id}
                   onClick={() => handlePromptSelect(prompt)}
-                  className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-zinc-800"
+                  className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-zinc-800 text-white focus:bg-zinc-800 focus:text-white"
                 >
                   <div className="flex items-center justify-between w-full">
-                    <div className="font-medium text-sm">{prompt.name}</div>
+                    <div className="font-medium text-sm text-white">{prompt.name}</div>
                     {prompt.category && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className="text-xs border-zinc-600 text-zinc-300">
                         {prompt.category}
                       </Badge>
                     )}
@@ -188,17 +194,17 @@ export function NewChatDropdown({
           {filteredUserPrompts.length > 0 && userPlan !== "free" && (
             <>
               {filteredAdminPrompts.length > 0 && <DropdownMenuSeparator className="bg-zinc-700" />}
-              <DropdownMenuLabel className="text-xs text-zinc-300">My Custom Prompts</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-xs text-white">My Custom Prompts</DropdownMenuLabel>
               {filteredUserPrompts.map((prompt) => (
                 <DropdownMenuItem
                   key={prompt.id}
                   onClick={() => handlePromptSelect(prompt)}
-                  className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-zinc-800"
+                  className="flex flex-col items-start gap-1 p-3 cursor-pointer hover:bg-zinc-800 text-white focus:bg-zinc-800 focus:text-white"
                 >
                   <div className="flex items-center justify-between w-full">
-                    <div className="font-medium text-sm">{prompt.name}</div>
+                    <div className="font-medium text-sm text-white">{prompt.name}</div>
                     {prompt.category && (
-                      <Badge variant="outline" className="text-xs">
+                      <Badge variant="outline" className="text-xs border-zinc-600 text-zinc-300">
                         {prompt.category}
                       </Badge>
                     )}
@@ -212,12 +218,12 @@ export function NewChatDropdown({
 
           {/* No results */}
           {searchTerm && filteredAdminPrompts.length === 0 && filteredUserPrompts.length === 0 && (
-            <div className="p-3 text-center text-zinc-300 text-sm">No prompts found matching "{searchTerm}"</div>
+            <div className="p-3 text-center text-white text-sm">No prompts found matching "{searchTerm}"</div>
           )}
 
           {/* Free user message */}
           {userPlan === "free" && userPrompts.length > 0 && (
-            <div className="p-3 text-xs text-zinc-300 border-t border-zinc-700">
+            <div className="p-3 text-xs text-white border-t border-zinc-700">
               Upgrade to access your custom prompts in new chats
             </div>
           )}

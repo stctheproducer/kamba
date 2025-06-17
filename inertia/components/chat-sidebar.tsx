@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { MessageSquare, Trash2, Edit3 } from "lucide-react"
+import { MessageSquare, Trash2, Edit3, ChevronLeft, ChevronRight } from "lucide-react"
 import { NewChatDropdown } from "@/components/new-chat-dropdown"
-import type { CustomPrompt } from "@/types/prompt-types"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import type { CustomPrompt } from "@/types/prompt_types"
 
 interface Conversation {
   id: string
@@ -83,6 +84,8 @@ export function ChatSidebar({
   onNewChatWithPrompt,
   onNewChat,
   userPlan = "free",
+  isCollapsed = false,
+  onToggleCollapse,
 }: {
   conversations: Conversation[]
   onSelectConversation: (id: string | null) => void
@@ -90,6 +93,8 @@ export function ChatSidebar({
   onNewChatWithPrompt?: (prompt: CustomPrompt) => void
   onNewChat: () => void
   userPlan?: string
+  isCollapsed?: boolean
+  onToggleCollapse?: () => void
 }) {
   const [localConversations, setLocalConversations] = useState<Conversation[]>(conversations)
   const [editingId, setEditingId] = useState<string | null>(null)
@@ -158,79 +163,176 @@ export function ChatSidebar({
   }, [onSelectConversation])
 
   return (
-    <div className="w-72 bg-zinc-950 border-r border-zinc-800 flex flex-col h-full">
-      <div className="p-4">
-        <NewChatDropdown
-          onNewChat={handleNewChat}
-          onNewChatWithPrompt={handleNewChatWithPrompt}
-          userPrompts={mockUserPrompts}
-          adminPrompts={mockAdminPrompts}
-          userPlan={userPlan}
-        />
-      </div>
-      <ScrollArea className="flex-1">
-        <div className="space-y-1 p-2">
-          {localConversations.map((conv) => (
-            <div
-              key={conv.id}
-              className={`group flex items-center justify-between p-3 rounded-md cursor-pointer hover:bg-zinc-800 ${currentConversationId === conv.id ? "bg-zinc-800" : ""
-                }`}
-              onClick={() => onSelectConversation(conv.id)}
-            >
-              <div className="flex items-center gap-3 overflow-hidden">
-                <MessageSquare className="h-4 w-4 text-zinc-500 flex-shrink-0" />
-                {editingId === conv.id ? (
-                  <input
-                    type="text"
-                    value={editingTitle}
-                    onChange={(e) => setEditingTitle(e.target.value)}
-                    onBlur={() => handleSaveEdit(conv.id)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSaveEdit(conv.id)}
-                    className="bg-transparent text-sm focus:outline-none focus:ring-1 focus:ring-primary rounded px-1 py-0.5 w-full"
-                    autoFocus
-                  />
-                ) : (
-                  <div className="flex flex-col overflow-hidden">
-                    <span className="text-sm truncate" title={conv.title}>
-                      {conv.title}
-                    </span>
-                    <span className="text-xs text-zinc-500">{conv.lastActivity}</span>
-                  </div>
-                )}
-              </div>
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                {editingId !== conv.id && (
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-7 w-7"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      handleStartEdit(conv)
-                    }}
-                  >
-                    <Edit3 className="h-3 w-3" />
-                  </Button>
-                )}
+    <div className={`${isCollapsed ? 'w-16' : 'w-72'} bg-zinc-950 border-r border-zinc-800 flex flex-col h-full transition-all duration-300 ease-in-out`}>
+      {/* Header with collapse button */}
+      <div className="p-4 flex items-center justify-between border-b border-zinc-800">
+        {!isCollapsed && (
+          <div className="flex items-center gap-2">
+            <MessageSquare className="h-6 w-6 text-primary" />
+            <span className="font-semibold">Kamba</span>
+          </div>
+        )}
+        {isCollapsed && (
+          <div className="flex justify-center w-full">
+            <MessageSquare className="h-6 w-6 text-primary" />
+          </div>
+        )}
+        {onToggleCollapse && (
+          <TooltipProvider delayDuration={100}>
+            <Tooltip>
+              <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-7 w-7"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    handleDeleteChat(conv.id)
-                  }}
+                  className="h-8 w-8"
+                  onClick={onToggleCollapse}
                 >
-                  <Trash2 className="h-3 w-3 text-red-500" />
+                  {isCollapsed ? (
+                    <ChevronRight className="h-4 w-4" />
+                  ) : (
+                    <ChevronLeft className="h-4 w-4" />
+                  )}
                 </Button>
-              </div>
+              </TooltipTrigger>
+              <TooltipContent side={isCollapsed ? "right" : "left"}>
+                {isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+      </div>
+
+      {!isCollapsed && (
+        <div className="p-4">
+          <NewChatDropdown
+            onNewChat={handleNewChat}
+            onNewChatWithPrompt={handleNewChatWithPrompt}
+            userPrompts={mockUserPrompts}
+            adminPrompts={mockAdminPrompts}
+            userPlan={userPlan}
+          />
+        </div>
+      )}
+
+      {isCollapsed && (
+        <div className="p-2">
+          <TooltipProvider delayDuration={100}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="w-full h-10"
+                  onClick={handleNewChat}
+                >
+                  <MessageSquare className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">New Chat</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      )}
+      <ScrollArea className="flex-1">
+        <div className="space-y-1 p-2">
+          {localConversations.map((conv) => (
+            <div key={conv.id}>
+              {isCollapsed ? (
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div
+                        className={`group flex items-center justify-center p-3 rounded-md cursor-pointer hover:bg-zinc-800 ${currentConversationId === conv.id ? "bg-zinc-800" : ""
+                          }`}
+                        onClick={() => onSelectConversation(conv.id)}
+                      >
+                        <MessageSquare className="h-4 w-4 text-zinc-500" />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="right">
+                      <div className="max-w-xs">
+                        <div className="font-medium">{conv.title}</div>
+                        <div className="text-xs text-zinc-400">{conv.lastActivity}</div>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
+                <div
+                  className={`group flex items-center justify-between p-3 rounded-md cursor-pointer hover:bg-zinc-800 ${currentConversationId === conv.id ? "bg-zinc-800" : ""
+                    }`}
+                  onClick={() => onSelectConversation(conv.id)}
+                >
+                  <div className="flex items-center gap-3 overflow-hidden">
+                    <MessageSquare className="h-4 w-4 text-zinc-500 flex-shrink-0" />
+                    {editingId === conv.id ? (
+                      <input
+                        type="text"
+                        value={editingTitle}
+                        onChange={(e) => setEditingTitle(e.target.value)}
+                        onBlur={() => handleSaveEdit(conv.id)}
+                        onKeyDown={(e) => e.key === "Enter" && handleSaveEdit(conv.id)}
+                        className="bg-transparent text-sm focus:outline-none focus:ring-1 focus:ring-primary rounded px-1 py-0.5 w-full"
+                        autoFocus
+                      />
+                    ) : (
+                      <div className="flex flex-col overflow-hidden">
+                        <span className="text-sm truncate" title={conv.title}>
+                          {conv.title}
+                        </span>
+                        <span className="text-xs text-zinc-500">{conv.lastActivity}</span>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {editingId !== conv.id && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleStartEdit(conv)
+                        }}
+                      >
+                        <Edit3 className="h-3 w-3" />
+                      </Button>
+                    )}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-7 w-7"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        handleDeleteChat(conv.id)
+                      }}
+                    >
+                      <Trash2 className="h-3 w-3 text-red-500" />
+                    </Button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
       </ScrollArea>
-      <div className="p-4 border-t border-zinc-800">
-        <p className="text-xs text-zinc-500">Local-First Storage: Active</p>
-      </div>
+      {!isCollapsed && (
+        <div className="p-4 border-t border-zinc-800">
+          <p className="text-xs text-zinc-500">Local-First Storage: Active</p>
+        </div>
+      )}
+      {isCollapsed && (
+        <div className="p-2 border-t border-zinc-800 flex justify-center">
+          <TooltipProvider delayDuration={100}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              </TooltipTrigger>
+              <TooltipContent side="right">Local-First Storage: Active</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      )}
     </div>
   )
 }
