@@ -44,3 +44,5 @@
 - For all Lucid ORM related documentation, use eithr:
   - the `context7` MCP server with the library ID of `/adonisjs/lucid.adonisjs.com`
   - or the `tavily` MCP server to extract information from <https://lucid.adonisjs.com>
+- Use the `assistant-ui` MCP server for all Assistant UI related documentation
+- Use the command line to install `assistant-ui` components (just like Shadcn) and then import them into the application code e.g. `npx shadcn@latest add "https://r.assistant-ui.com/thread"`

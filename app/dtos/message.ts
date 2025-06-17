@@ -6,7 +6,7 @@ export default class MessageDto extends BaseModelDto {
   declare id: string
   declare chatId: string
   declare parentMessageId: string | null
-  declare role: system | user | assistant | tool
+  declare role: 'system' | 'user' | 'assistant' | 'tool'
   declare content: string
   declare metadata: any | null
   declare createdAt: string
@@ -28,7 +28,7 @@ export default class MessageDto extends BaseModelDto {
     this.metadata = message.metadata
     this.createdAt = message.createdAt.toISO()!
     this.updatedAt = message.updatedAt.toISO()!
-    this.deletedAt = message.deletedAt?.toISO()!
+    this.deletedAt = message.deletedAt?.toISO() ?? null
     this.chat = message.chat && new ChatDto(message.chat)
     this.parentMessage = message.parentMessage && new MessageDto(message.parentMessage)
     this.childMessages = MessageDto.fromArray(message.childMessages)

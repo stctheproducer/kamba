@@ -46,6 +46,7 @@ router
   .as('auth')
 
 const ChatsController = () => import('#controllers/chats_controller')
+// UI routes for chats and messages
 router
   .group(() => {
     router.get('/', [ChatsController, 'index']).as('chat')
@@ -57,11 +58,11 @@ router
 // API routes for chats and messages
 router
   .group(() => {
-    // router
-    //   .post('/chats', [ChatsController, 'store'])
-    //   .use(middleware.auth())
-    //   .use(middleware.reportUsage({ event: 'chats.created' }))
-    //   .as('chats.store')
+    router
+      .post('/chats', [ChatsController, 'store'])
+      // .use(middleware.auth())
+      .use(middleware.reportUsage({ event: 'chats.created' }))
+      .as('chats.store')
     // router
     //   .post('/chats/:id/messages', [ChatsController, 'storeMessage'])
     //   .use(middleware.auth())

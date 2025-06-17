@@ -1,5 +1,5 @@
 import type { ApplicationService } from '@adonisjs/core/types'
-import { UsageService } from '#services/usage_service'
+// import { UsageService } from '#services/usage_service'
 
 export default class UsageServiceProvider {
   constructor(protected app: ApplicationService) {}
@@ -8,9 +8,9 @@ export default class UsageServiceProvider {
    * Register bindings to the container
    */
   register() {
-    this.app.container.singleton(UsageService, () => {
-      return new UsageService()
-    })
+    // this.app.container.singleton(UsageService, () => {
+    //   return new UsageService()
+    // })
   }
 
   /**

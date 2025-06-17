@@ -4,6 +4,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { MessageSquare, Trash2, Edit3, ChevronLeft, ChevronRight } from "lucide-react"
 import { NewChatDropdown } from "@/components/new-chat-dropdown"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { cn } from "@/lib/utils"
 import type { CustomPrompt } from "@/types/prompt_types"
 
 interface Conversation {
@@ -172,11 +173,6 @@ export function ChatSidebar({
             <span className="font-semibold">Kamba</span>
           </div>
         )}
-        {isCollapsed && (
-          <div className="flex justify-center w-full">
-            <MessageSquare className="h-6 w-6 text-primary" />
-          </div>
-        )}
         {onToggleCollapse && (
           <TooltipProvider delayDuration={100}>
             <Tooltip>
@@ -184,7 +180,7 @@ export function ChatSidebar({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8"
+                  className={cn("h-8 w-8", isCollapsed && "mx-auto")}
                   onClick={onToggleCollapse}
                 >
                   {isCollapsed ? (

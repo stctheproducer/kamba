@@ -26,6 +26,7 @@
     "node_modules",
     "build",
     ".react-email",
+    "resources/emails",
     "v0-generated-code"
   ]
 }

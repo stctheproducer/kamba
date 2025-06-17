@@ -5,6 +5,10 @@
       "args": [
         "-y",
         "@assistant-ui/mcp-docs-server"
+      ],
+      "alwaysAllow": [
+        "assistantUIDocs",
+        "assistantUIExamples"
       ]
     }
   }

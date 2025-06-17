@@ -6,7 +6,7 @@ export const firstScheduledTask = schedules.task({
   cron: '0 * * * *',
   // Set an optional maxDuration to prevent tasks from running indefinitely
   maxDuration: 300, // Stop executing after 300 secs (5 mins) of compute
-  run: async (payload, { ctx }) => {
+  run: async (payload, { ctx: _ }) => {
     // The payload contains the last run timestamp that you can use to check if this is the first run
     // And calculate the time since the last run
     const distanceInMs =

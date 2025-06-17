@@ -9,3 +9,4 @@
 - Use React v19 for the frontend code
 - The v0 generated code is for UI enhancement only
 - You should adapt the generated code to the current project, with UI components limited to the `inertia` directory
+- Configuration values that depend on environment values shall first depend on InertiaJS' shared data before any `VITE_ENV_{ABRITRARY_VALUE}` environment variables

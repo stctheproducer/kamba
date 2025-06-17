@@ -1,14 +1,15 @@
 import env from '#start/env'
 import { defineConfig, services } from 'adonis-captcha-guard'
+import { InferCaptchaProviders } from 'adonis-captcha-guard/types'
 
 const captchaConfig = defineConfig({
   turnstile: services.turnstile({
-    siteKey: env.get('TURNSTILE_SITE_KEY'),
-    secret: env.get('TURNSTILE_SECRET'),
+    siteKey: env.get('TURNSTILE_SITE_KEY', ''),
+    secret: env.get('TURNSTILE_SECRET', ''),
   }),
   recaptcha: services.recaptcha({
-    siteKey: env.get('RECAPTCHA_SITE_KEY'),
-    secret: env.get('RECAPTCHA_SECRET'),
+    siteKey: env.get('RECAPTCHA_SITE_KEY', ''),
+    secret: env.get('RECAPTCHA_SECRET', ''),
   }),
 })
 

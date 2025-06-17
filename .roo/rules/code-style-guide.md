@@ -11,6 +11,8 @@
 - Use `null` instead of `undefined` when appropriate
 - Use the `tryCatch` helper function instead of try-catch blocks
 - Use descriptive variable and function names
+- Do not use Next.js specific features
+- Do not use `"use client"` or `"use server"`
 
 ## TypeScript
 

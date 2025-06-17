@@ -30,7 +30,7 @@ export default class AuthController {
       instance,
     })
 
-    logger.info('Handling OAuth callback')
+    logger.debug('Handling OAuth callback')
 
     const oauth = ally.use(request.param('provider') as 'logto' | 'github')
 

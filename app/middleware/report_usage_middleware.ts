@@ -16,6 +16,9 @@ export default class ReportUsageMiddleware {
     const { auth, response } = ctx
     const user = auth.getUserOrFail()
 
+    // TODO: Use response
+    ctx.logger.debug(response, 'Do something')
+
     // Report usage before processing the request
     await this.usageService.reportUsage(options.event, user.id)
 
