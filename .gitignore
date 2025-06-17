@@ -1,4 +1,3 @@
-.git
 # Dependencies and AdonisJS build
 node_modules
 build
@@ -35,3 +34,4 @@ yarn-error.log
 .trigger
 .react-email
 out
+# t3-chat-clone-v0/

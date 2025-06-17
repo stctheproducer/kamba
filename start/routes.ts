@@ -48,8 +48,9 @@ router
 const ChatsController = () => import('#controllers/chats_controller')
 router
   .group(() => {
-    router.get('/', [ChatsController, 'index']).use(middleware.auth()).as('chat')
+    router.get('/', [ChatsController, 'index']).as('chat')
   })
+  .use(middleware.auth())
   .prefix('chat')
   .as('chat')
 

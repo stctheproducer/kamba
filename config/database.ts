@@ -49,6 +49,11 @@ const dbConfig = defineConfig({
         filename: app.tmpPath(env.get('LIMITER_DB_FILE', 'limiter.sqlite')),
         debug: env.get('LOG_LEVEL') === 'debug',
       },
+      migrations: {
+        naturalSort: true,
+        paths: ['database/limiter-migrations'],
+        disableRollbacksInProduction: true,
+      },
     },
   },
 })

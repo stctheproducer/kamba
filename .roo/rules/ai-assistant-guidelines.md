@@ -35,3 +35,12 @@
 - Respect the SQLite and LiveStore database choices
 - Consider the WebSocket synchronization mechanism in all suggestions
 - Preserve the separation between frontend (React/Inertia) and backend (AdonisJS)
+
+## Documentation
+
+- For all AdonisJS related documentation, use eithr:
+  - the `context7` MCP server with the library ID of `adonisjs/docs-v6`
+  - or the `tavily` MCP server to extract information from <https://docs.adonisjs.com>
+- For all Lucid ORM related documentation, use eithr:
+  - the `context7` MCP server with the library ID of `/adonisjs/lucid.adonisjs.com`
+  - or the `tavily` MCP server to extract information from <https://lucid.adonisjs.com>

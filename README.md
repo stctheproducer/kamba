@@ -156,6 +156,7 @@ node ace key:generate
 
 ```bash
 node ace migration:run
+node ace migration:run --connection=limiter
 ```
 
 ### Environment Variables with dotenvx
