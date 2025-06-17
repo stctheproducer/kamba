@@ -1,5 +1,3 @@
-"use client";
-
 import { FC } from "react";
 import ShikiHighlighter, { type ShikiHighlighterProps } from "react-shiki";
 import type { SyntaxHighlighterProps as AUIProps } from "@assistant-ui/react-markdown";
@@ -37,7 +35,7 @@ export const SyntaxHighlighter: FC<HighlighterProps> = ({
   components: _components,
   ...props
 }) => {
-  const BASE_STYLES = "[&_pre]:overflow-x-auto [&_pre]:rounded-b-lg [&_pre]:bg-black [&_pre]:p-4 [&_pre]:text-white";
+  const BASE_STYLES = "[&_pre]:overflow-x-auto [&_pre]:rounded-b-lg [&_pre]:bg-zinc-950 [&_pre]:p-4 [&_pre]:text-zinc-100";
 
   return (
     <ShikiHighlighter

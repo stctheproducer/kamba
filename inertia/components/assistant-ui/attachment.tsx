@@ -89,7 +89,7 @@ const AttachmentPreviewDialog: FC<PropsWithChildren> = ({ children }) => {
 
   return (
     <Dialog>
-      <DialogTrigger className="hover:bg-accent/50 cursor-pointer transition-colors" asChild>
+      <DialogTrigger className="hover:bg-zinc-800/50 cursor-pointer transition-colors" asChild>
         {children}
       </DialogTrigger>
       <AttachmentDialogContent>
@@ -106,7 +106,7 @@ const AttachmentThumb: FC = () => {
   const isImage = useAttachment((a) => a.type === "image");
   const src = useAttachmentSrc();
   return (
-    <Avatar className="bg-muted flex size-10 items-center justify-center rounded border text-sm">
+    <Avatar className="bg-zinc-800 flex size-10 items-center justify-center rounded border border-zinc-700 text-sm">
       <AvatarFallback delayMs={isImage ? 200 : 0}>
         <FileIcon />
       </AvatarFallback>
@@ -136,13 +136,13 @@ const AttachmentUI: FC = () => {
       <AttachmentPrimitive.Root className="relative mt-3">
         <AttachmentPreviewDialog>
           <TooltipTrigger asChild>
-            <div className="flex h-12 w-40 items-center justify-center gap-2 rounded-lg border p-1">
+            <div className="flex h-12 w-40 items-center justify-center gap-2 rounded-lg border border-zinc-700 bg-zinc-800/50 p-1">
               <AttachmentThumb />
               <div className="flex-grow basis-0">
-                <p className="text-muted-foreground line-clamp-1 text-ellipsis break-all text-xs font-bold">
+                <p className="text-zinc-300 line-clamp-1 text-ellipsis break-all text-xs font-bold">
                   <AttachmentPrimitive.Name />
                 </p>
-                <p className="text-muted-foreground text-xs">{typeLabel}</p>
+                <p className="text-zinc-400 text-xs">{typeLabel}</p>
               </div>
             </div>
           </TooltipTrigger>
@@ -161,7 +161,7 @@ const AttachmentRemove: FC = () => {
     <AttachmentPrimitive.Remove asChild>
       <TooltipIconButton
         tooltip="Remove file"
-        className="text-muted-foreground [&>svg]:bg-background absolute -right-3 -top-3 size-6 [&>svg]:size-4 [&>svg]:rounded-full"
+        className="text-zinc-400 [&>svg]:bg-zinc-900 absolute -right-3 -top-3 size-6 [&>svg]:size-4 [&>svg]:rounded-full"
         side="top"
       >
         <CircleXIcon />
@@ -205,7 +205,7 @@ export const ComposerAddAttachment: FC = () => {
 const AttachmentDialogContent: FC<PropsWithChildren> = ({ children }) => (
   <DialogPortal>
     <DialogOverlay />
-    <DialogPrimitiveContent className="aui-dialog-content">
+    <DialogPrimitiveContent className="aui-dialog-content bg-zinc-900 border border-zinc-700">
       {children}
     </DialogPrimitiveContent>
   </DialogPortal>

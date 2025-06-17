@@ -1,5 +1,3 @@
-"use client";
-
 import { useContentPart } from "@assistant-ui/react";
 import type { SyntaxHighlighterProps } from "@assistant-ui/react-markdown";
 import mermaid from "mermaid";
@@ -14,7 +12,7 @@ export type MermaidDiagramProps = SyntaxHighlighterProps & {
 };
 
 // Configure mermaid options here
-mermaid.initialize({ theme: "default" });
+mermaid.initialize({ theme: "dark" });
 
 /**
  * MermaidDiagram component for rendering Mermaid diagrams
@@ -80,7 +78,7 @@ export const MermaidDiagram: FC<MermaidDiagramProps> = ({
   }, [isComplete, code]);
 
   return (
-    <pre ref={ref} className={cn("bg-muted rounded-b-lg p-2 text-center [&_svg]:mx-auto", className)}>
+    <pre ref={ref} className={cn("bg-zinc-800 text-zinc-100 rounded-b-lg p-2 text-center [&_svg]:mx-auto", className)}>
       Drawing diagram...
     </pre>
   );
