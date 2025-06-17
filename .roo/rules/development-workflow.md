@@ -17,9 +17,9 @@
 
   ```
   <type>[optional scope]: <description>
-  
+
   [optional body]
-  
+
   [optional footer(s)]
   ```
 
@@ -34,3 +34,7 @@
 - Request reviews from appropriate team members
 - Address all feedback from reviewers
 - PRs will be squashed and merged
+
+## Commandline Tools
+
+- Node.js global binaries are in $HOME/.volta/bin/

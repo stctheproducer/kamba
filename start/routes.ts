@@ -50,7 +50,7 @@ router
   .group(() => {
     router.get('/', [ChatsController, 'index']).as('chat')
   })
-  .use(middleware.auth())
+  // .use(middleware.auth())
   .prefix('chat')
   .as('chat')
 

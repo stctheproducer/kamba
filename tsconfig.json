@@ -25,6 +25,7 @@
     "./inertia/**/*",
     "node_modules",
     "build",
-    ".react-email"
+    ".react-email",
+    "v0-generated-code"
   ]
 }
