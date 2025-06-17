@@ -23,14 +23,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   )
 }
 
-const links = [
-  { name: "home", href: '/', label: "Home" },
-  { name: "auth.login", href: '/auth/logto/redirect', label: "Login" },
-  { name: 'chat.chat', href: '/chat', label: "Chat" }
-] as const
 
 const TopNavigation = () => {
   const { props } = usePage<SharedProps>()
+
+  const links = [
+    { name: "home", href: '/', label: "Home" },
+    ...(!props.isAuthenticated ? [{ name: "auth.login", href: `/auth/${props.authProvider}/redirect`, label: "Login" }] : []),
+    { name: 'chat.chat', href: '/chat', label: "Chat" }
+  ] as const
 
   return (
     <NavigationMenu className='py-4'>

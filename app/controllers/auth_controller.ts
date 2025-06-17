@@ -6,11 +6,20 @@ import type { HttpContext } from '@adonisjs/core/http'
 // import { v7 as uuidv7 } from 'uuid'
 
 export default class AuthController {
-  async login({ ally, inertia, logger: parentLogger }: HttpContext) {
+  async login({ ally, request, inertia, logger: parentLogger }: HttpContext) {
     const logger = parentLogger.child({ context: 'AuthController.login' })
-    logger.info('Initiating Logto login redirect')
+    logger.info('Initiating OAuth login redirect')
+    const provider = request.param('provider')
+
+    if (!['logto', 'github'].includes(provider)) {
+      logger.warn({ provider }, 'Unsupported OAuth provider requested')
+      throw new UnauthorizedException('Unsupported OAuth provider')
+    }
+
+    // provider is now safely typed as the allowed union
+    const typedProvider = provider as 'logto' | 'github'
     // Redirect user to Logto for authentication
-    return inertia.location(await ally.use('logto').getRedirectUrl())
+    return inertia.location(await ally.use(typedProvider).getRedirectUrl())
   }
 
   async handleCallback({ ally, request, inertia, auth, logger: parentLogger }: HttpContext) {
@@ -21,52 +30,77 @@ export default class AuthController {
       instance,
     })
 
-    logger.info('Handling Logto callback')
+    logger.info('Handling OAuth callback')
 
-    const logto = ally.use('logto')
+    const provider = request.param('provider')
+
+    if (!['logto', 'github'].includes(provider)) {
+      logger.warn({ provider }, 'Unsupported OAuth provider requested')
+      throw new UnauthorizedException('Unsupported OAuth provider')
+    }
+
+    // provider is now safely typed as the allowed union
+    const typedProvider = provider as 'logto' | 'github'
+
+    const oauth = ally.use(typedProvider)
 
     // The user has denied access or something went wrong with Logto
-    if (logto.accessDenied()) {
-      logger.warn('User denied access during Logto callback')
+    if (oauth.accessDenied()) {
+      logger.warn('User denied access during OAuth callback')
       throw new UnauthorizedException('Access denied by user')
     }
 
-    // Logto returned an error
-    if (logto.hasError()) {
-      const error = logto.getError()
-      logger.error({ error }, 'Something went wrong post redirect from Logto')
+    // OAuth returned an error
+    if (oauth.hasError()) {
+      const error = oauth.getError()
+      logger.error({ error }, 'Something went wrong post redirect from OAuth')
       throw new UnauthorizedException('Authentication failed', instance, { error })
     }
 
-    // Use tryCatch for fetching Logto user details
-    const [logtoUser, logtoUserError] = await tryCatch(() => logto.user())
+    // Use tryCatch for fetching OAuth user details
+    const [oauthUser, oauthUserError] = await tryCatch(() => oauth.user())
 
-    if (logtoUserError || !logtoUser) {
-      logger.error({ error: logtoUserError }, 'Failed to retrieve Logto user details')
-      throw new UnauthorizedException('Failed to retrieve Logto user details', instance, {
-        error: logtoUserError,
+    if (oauthUserError || !oauthUser) {
+      logger.error({ error: oauthUserError }, 'Failed to retrieve OAuth user details')
+      throw new UnauthorizedException('Failed to retrieve OAuth user details', instance, {
+        error: oauthUserError,
       })
     }
 
+    // Check if email is available in the OAuth user data
+    if (!oauthUser.email) {
+      logger.error(
+        { oauthUserId: oauthUser.id },
+        'Email is required but not provided by OAuth provider'
+      )
+      throw new UnauthorizedException(
+        'Email permission is required. Please grant access to your email address to continue.',
+        instance
+      )
+    }
+
     logger.debug(
-      { logtoUserId: logtoUser.id, email: logtoUser.email },
-      'Successfully retrieved Logto user'
+      { oauthUserId: oauthUser.id, email: oauthUser.email },
+      'Successfully retrieved OAuth user'
     )
 
     // Find or create the user in our database
     // Using tryCatch for database operation
     const [user, findOrCreateError] = await tryCatch(async () => {
       // Find a user by their Logto ID
-      let userRecord = await User.findBy('logtoId', logtoUser.id)
+      let userRecord = await User.findBy('oauthId', oauthUser.id)
 
       if (!userRecord) {
-        logger.info({ logtoUserId: logtoUser.id }, 'User not found, creating new user')
+        logger.info({ oauthUserId: oauthUser.id }, 'User not found, creating new user')
         // User not found, create a new one
         userRecord = new User()
         // userRecord.id = uuidv7() // Generate UUID for SQLite
-        userRecord.logtoId = logtoUser.id
-        userRecord.email = logtoUser.email!
-        userRecord.username = logtoUser.nickName || logtoUser.email!.split('@')[0] // Basic username generation
+        userRecord.oauthId = oauthUser.id
+        userRecord.oauthProvider = typedProvider
+        userRecord.email = oauthUser.email
+        userRecord.username =
+          oauthUser.nickName ??
+          (oauthUser.email ? oauthUser.email.split('@')[0] : `user_${Date.now()}`)
         // userRecord.isBetaUser = false // Default status
         // userRecord.isPayingUser = false // Default status
 
@@ -76,7 +110,7 @@ export default class AuthController {
         // TODO: Emit a user created event for activity logging and other processes
         // Events.emit('user::created', { userId: userRecord.id, logtoUserId: logtoUser.id })
       } else {
-        logger.debug({ userId: userRecord.id, logtoUserId: logtoUser.id }, 'Existing user found')
+        logger.debug({ userId: userRecord.id, logtoUserId: oauthUser.id }, 'Existing user found')
         // TODO: Optionally update user information from Logto if needed
         // e.g., userRecord.username = logtoUser.username || userRecord.username
         // await userRecord.save()
@@ -87,7 +121,7 @@ export default class AuthController {
 
     // Ideally this shouldn't happen, but it's a good guard to have
     if (!user) {
-      logger.error({ logtoUserId: logtoUser.id }, 'Failed to find or create user')
+      logger.error({ oauthUserId: oauthUser.id }, 'Failed to find or create user')
       throw new ServerErrorException('Failed to process user account', instance, {
         error: findOrCreateError,
       })
@@ -95,7 +129,7 @@ export default class AuthController {
 
     if (findOrCreateError) {
       logger.error(
-        { error: findOrCreateError, logtoUserId: logtoUser.id },
+        { error: findOrCreateError, oauthUserId: oauthUser.id },
         'Failed to find or create user'
       )
       // Depending on your policy, you might want to throw a different exception

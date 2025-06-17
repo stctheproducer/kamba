@@ -48,7 +48,10 @@ export default class User extends compose(BaseModel, AuthFinder) {
   declare password?: string
 
   @column()
-  declare logtoId: string
+  declare oauthId: string
+
+  @column()
+  declare oauthProvider: 'logto' | 'github'
 
   @column()
   declare username: string | null

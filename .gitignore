@@ -6,10 +6,12 @@ tmp
 # Secrets
 .env*
 !.env.vault
-!.env.development
-!.env.ci
-!.env.testing
-!.env.staging
+# Enable these if you decide to use dotenvx
+# !.env.development
+# !.env.ci
+# !.env.testing
+# !.env.staging
+# !.env.production
 
 # Project requirements (sensitive)
 project_requirements/

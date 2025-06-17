@@ -14,7 +14,8 @@ const inertiaConfig = defineConfig({
   sharedData: {
     user: (ctx) => ctx.inertia.always(() => ctx.auth.user),
     isAuthenticated: (ctx) => ctx.inertia.always(() => ctx.auth.isAuthenticated),
-    appName: env.get('APP_NAME', 'AdonisJS'),
+    appName: env.get('APP_NAME', 'Kamba'),
+    authProvider: env.get('OAUTH_PROVIDER', 'logto'), // sensible default
   },
 
   /**

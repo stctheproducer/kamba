@@ -30,9 +30,15 @@ router
   .group(() => {
     router.on('/login').renderInertia('auth/login').as('login')
 
-    router.get('/logto/redirect', [AuthController, 'login']).as('logto.redirect')
+    router
+      .get('/:provider/redirect', [AuthController, 'login'])
+      .where('provider', /logto|github/)
+      .as('oauth.redirect')
 
-    router.get('/logto/callback', [AuthController, 'handleCallback']).as('logto.callback')
+    router
+      .get('/:provider/callback', [AuthController, 'handleCallback'])
+      .where('provider', /logto|github/)
+      .as('oauth.callback')
 
     router.post('/logout', [AuthController, 'logout']).as('logout')
   })
@@ -50,17 +56,16 @@ router
 // API routes for chats and messages
 router
   .group(() => {
-    router
-      .post('/chats', [ChatsController, 'store'])
-      .use(middleware.auth())
-      .use(middleware.reportUsage({ event: 'chats.created' }))
-      .as('chats.store')
-
-    router
-      .post('/chats/:id/messages', [ChatsController, 'storeMessage'])
-      .use(middleware.auth())
-      .use(middleware.reportUsage({ event: 'messages.created' }))
-      .as('chats.messages.store')
+    // router
+    //   .post('/chats', [ChatsController, 'store'])
+    //   .use(middleware.auth())
+    //   .use(middleware.reportUsage({ event: 'chats.created' }))
+    //   .as('chats.store')
+    // router
+    //   .post('/chats/:id/messages', [ChatsController, 'storeMessage'])
+    //   .use(middleware.auth())
+    //   .use(middleware.reportUsage({ event: 'messages.created' }))
+    //   .as('chats.messages.store')
   })
   .prefix('api')
   .as('api')

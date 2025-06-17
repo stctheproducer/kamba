@@ -1,3 +1,4 @@
+import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/shield'
 
 const shieldConfig = defineConfig({
@@ -6,7 +7,7 @@ const shieldConfig = defineConfig({
    * to learn more
    */
   csp: {
-    enabled: true,
+    enabled: app.inProduction,
     directives: {
       defaultSrc: ['self'],
       scriptSrc: ['self', 'https://cdnjs.cloudflare.com'],
