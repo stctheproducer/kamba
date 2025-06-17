@@ -127,9 +127,13 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
   SMTP_PROVIDER: Env.schema.enum(['smtp', 'sendgrid', 'mailgun', 'ses'] as const),
-  SMTP_HOST: Env.schema.string.optionalWhen(process.env.NODE_ENV === 'production'),
-  SMTP_PORT: Env.schema.string.optionalWhen(process.env.NODE_ENV === 'production'),
-
+  // Required when we _are_ in production _and_ using the raw SMTP provider
+  SMTP_HOST: Env.schema.string.optionalWhen(
+    process.env.SMTP_PROVIDER !== 'smtp' || process.env.NODE_ENV !== 'production'
+  ),
+  SMTP_PORT: Env.schema.number.optionalWhen(
+    process.env.SMTP_PROVIDER !== 'smtp' || process.env.NODE_ENV !== 'production'
+  ),
   /*
   |----------------------------------------------------------
   | Variables for configuring ally package
