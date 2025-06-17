@@ -29,7 +29,7 @@ const TopNavigation = () => {
 
   const links = [
     { name: "home", href: '/', label: "Home" },
-    { name: "auth.login", href: `/auth/${props.authProvider}/redirect`, label: "Login" },
+    ...(!props.isAuthenticated ? [{ name: "auth.login", href: `/auth/${props.authProvider}/redirect`, label: "Login" }] : []),
     { name: 'chat.chat', href: '/chat', label: "Chat" }
   ] as const
 
