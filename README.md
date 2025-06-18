@@ -146,7 +146,7 @@ pnpm install
 cp .env.example .env
 ```
 
-Edit the `.env` file with your configuration details, including paths for the SQLite files and external service credentials, e.g. GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, and GITHUB_REDIRECT_URI.
+Edit the `.env` file with your configuration details, including paths for the SQLite files and external service credentials, e.g. OPENAI_API_KEY, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, and GITHUB_REDIRECT_URI.
 
 4. Generate the projects `APP_KEY` secret using the following command
 
