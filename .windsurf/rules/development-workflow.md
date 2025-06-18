@@ -21,9 +21,9 @@ trigger: always_on
 
   ```
   <type>[optional scope]: <description>
-  
+
   [optional body]
-  
+
   [optional footer(s)]
   ```
 

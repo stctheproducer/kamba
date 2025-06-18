@@ -7,7 +7,7 @@ export default class MessageDto extends BaseModelDto {
   declare chatId: string
   declare parentMessageId: string | null
   declare role: 'system' | 'user' | 'assistant' | 'tool'
-  declare content: string
+  declare content: any
   declare metadata: any | null
   declare createdAt: string
   declare updatedAt: string

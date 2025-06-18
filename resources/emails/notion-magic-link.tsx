@@ -8,19 +8,15 @@ import {
   Link,
   Preview,
   Text,
-} from '@react-email/components';
+} from '@react-email/components'
 
 interface NotionMagicLinkEmailProps {
-  loginCode?: string;
+  loginCode?: string
 }
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : '';
+const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : ''
 
-export const NotionMagicLinkEmail = ({
-  loginCode,
-}: NotionMagicLinkEmailProps) => (
+export const NotionMagicLinkEmail = ({ loginCode }: NotionMagicLinkEmailProps) => (
   <Html>
     <Head />
     <Preview>Log in with this magic link</Preview>
@@ -60,21 +56,11 @@ export const NotionMagicLinkEmail = ({
             marginBottom: '38px',
           }}
         >
-          Hint: You can set a permanent password in Settings & members → My
-          account.
+          Hint: You can set a permanent password in Settings & members → My account.
         </Text>
-        <Img
-          src={`${baseUrl}/static/notion-logo.png`}
-          width="32"
-          height="32"
-          alt="Notion's Logo"
-        />
+        <Img src={`${baseUrl}/static/notion-logo.png`} width="32" height="32" alt="Notion's Logo" />
         <Text style={footer}>
-          <Link
-            href="https://notion.so"
-            target="_blank"
-            style={{ ...link, color: '#898989' }}
-          >
+          <Link href="https://notion.so" target="_blank" style={{ ...link, color: '#898989' }}>
             Notion.so
           </Link>
           , the all-in-one-workspace
@@ -84,23 +70,23 @@ export const NotionMagicLinkEmail = ({
       </Container>
     </Body>
   </Html>
-);
+)
 
 NotionMagicLinkEmail.PreviewProps = {
   loginCode: 'sparo-ndigo-amurt-secan',
-} as NotionMagicLinkEmailProps;
+} as NotionMagicLinkEmailProps
 
-export default NotionMagicLinkEmail;
+export default NotionMagicLinkEmail
 
 const main = {
   backgroundColor: '#ffffff',
-};
+}
 
 const container = {
   paddingLeft: '12px',
   paddingRight: '12px',
   margin: '0 auto',
-};
+}
 
 const h1 = {
   color: '#333',
@@ -110,7 +96,7 @@ const h1 = {
   fontWeight: 'bold',
   margin: '40px 0',
   padding: '0',
-};
+}
 
 const link = {
   color: '#2754C5',
@@ -118,7 +104,7 @@ const link = {
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
   fontSize: '14px',
   textDecoration: 'underline',
-};
+}
 
 const text = {
   color: '#333',
@@ -126,7 +112,7 @@ const text = {
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
   fontSize: '14px',
   margin: '24px 0',
-};
+}
 
 const footer = {
   color: '#898989',
@@ -136,7 +122,7 @@ const footer = {
   lineHeight: '22px',
   marginTop: '12px',
   marginBottom: '24px',
-};
+}
 
 const code = {
   display: 'inline-block',
@@ -146,4 +132,4 @@ const code = {
   borderRadius: '5px',
   border: '1px solid #eee',
   color: '#333',
-};
+}

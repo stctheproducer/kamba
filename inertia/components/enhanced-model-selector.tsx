@@ -1,19 +1,11 @@
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import {
-  BrainCircuit,
-  Key,
-  Globe,
-  Database,
-  Zap,
-  Crown,
-  Check
-} from "lucide-react"
-import { cn } from "@/lib/utils"
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Badge } from '@/components/ui/badge'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { BrainCircuit, Key, Globe, Database, Zap, Crown, Check } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export interface AIModel {
   id: string
@@ -29,87 +21,87 @@ export interface AIModel {
 
 const availableModels: AIModel[] = [
   {
-    id: "gpt-4o-mini",
-    name: "GPT-4o Mini",
-    provider: "OpenAI",
-    contextLimit: "128K tokens",
-    capabilities: ["Text", "Vision", "Code"],
-    description: "Fast and efficient model for everyday tasks"
+    id: 'gpt-4o-mini',
+    name: 'GPT-4o Mini',
+    provider: 'OpenAI',
+    contextLimit: '128K tokens',
+    capabilities: ['Text', 'Vision', 'Code'],
+    description: 'Fast and efficient model for everyday tasks',
   },
   {
-    id: "gpt-4o",
-    name: "GPT-4o",
-    provider: "OpenAI",
+    id: 'gpt-4o',
+    name: 'GPT-4o',
+    provider: 'OpenAI',
     isPro: true,
-    contextLimit: "128K tokens",
-    capabilities: ["Text", "Vision", "Code", "Advanced Reasoning"],
-    description: "Most capable OpenAI model with multimodal abilities"
+    contextLimit: '128K tokens',
+    capabilities: ['Text', 'Vision', 'Code', 'Advanced Reasoning'],
+    description: 'Most capable OpenAI model with multimodal abilities',
   },
   {
-    id: "claude-3-haiku",
-    name: "Claude 3 Haiku",
-    provider: "Anthropic",
-    contextLimit: "200K tokens",
-    capabilities: ["Text", "Code", "Fast Response"],
-    description: "Fastest Claude model for quick tasks"
+    id: 'claude-3-haiku',
+    name: 'Claude 3 Haiku',
+    provider: 'Anthropic',
+    contextLimit: '200K tokens',
+    capabilities: ['Text', 'Code', 'Fast Response'],
+    description: 'Fastest Claude model for quick tasks',
   },
   {
-    id: "claude-3-sonnet",
-    name: "Claude 3 Sonnet",
-    provider: "Anthropic",
+    id: 'claude-3-sonnet',
+    name: 'Claude 3 Sonnet',
+    provider: 'Anthropic',
     isPro: true,
-    contextLimit: "200K tokens",
-    capabilities: ["Text", "Vision", "Code", "Analysis"],
-    description: "Balanced performance and intelligence"
+    contextLimit: '200K tokens',
+    capabilities: ['Text', 'Vision', 'Code', 'Analysis'],
+    description: 'Balanced performance and intelligence',
   },
   {
-    id: "openrouter/gemini-flash",
-    name: "Gemini Flash",
-    provider: "OpenRouter",
+    id: 'openrouter/gemini-flash',
+    name: 'Gemini Flash',
+    provider: 'OpenRouter',
     supportsCustomKey: true,
-    contextLimit: "1M tokens",
-    capabilities: ["Text", "Vision", "Code", "Large Context"],
-    description: "Google's fast multimodal model via OpenRouter"
+    contextLimit: '1M tokens',
+    capabilities: ['Text', 'Vision', 'Code', 'Large Context'],
+    description: "Google's fast multimodal model via OpenRouter",
   },
   {
-    id: "openrouter/mistral-large",
-    name: "Mistral Large",
-    provider: "OpenRouter",
+    id: 'openrouter/mistral-large',
+    name: 'Mistral Large',
+    provider: 'OpenRouter',
     isPro: true,
     supportsCustomKey: true,
-    contextLimit: "128K tokens",
-    capabilities: ["Text", "Code", "Multilingual"],
-    description: "Mistral's most capable model via OpenRouter"
+    contextLimit: '128K tokens',
+    capabilities: ['Text', 'Code', 'Multilingual'],
+    description: "Mistral's most capable model via OpenRouter",
   },
 ]
 
 interface EnhancedModelSelectorProps {
   selectedModelId: string
   onModelChange: (modelId: string) => void
-  userPlan?: "free" | "plus" | "pro"
+  userPlan?: 'free' | 'plus' | 'pro'
   customApiKeys?: Record<string, string>
   onApiKeyChange?: (modelId: string, apiKey: string) => void
-  variant?: "desktop" | "mobile"
+  variant?: 'desktop' | 'mobile'
 }
 
 export function EnhancedModelSelector({
   selectedModelId,
   onModelChange,
-  userPlan = "free",
+  userPlan = 'free',
   customApiKeys = {},
   onApiKeyChange,
-  variant = "desktop"
+  variant = 'desktop',
 }: EnhancedModelSelectorProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState<"models" | "extensions">("models")
+  const [activeTab, setActiveTab] = useState<'models' | 'extensions'>('models')
   const [hoveredModel, setHoveredModel] = useState<string | null>(null)
 
-  const selectedModel = availableModels.find(m => m.id === selectedModelId)
+  const selectedModel = availableModels.find((m) => m.id === selectedModelId)
   const hasCustomKey = selectedModel?.supportsCustomKey && customApiKeys[selectedModelId]
-  const isPro = userPlan === "pro" || userPlan === "plus"
+  const isPro = userPlan === 'pro' || userPlan === 'plus'
 
   const handleModelSelect = (modelId: string) => {
-    const model = availableModels.find(m => m.id === modelId)
+    const model = availableModels.find((m) => m.id === modelId)
     if (!model || (model.isPro && !isPro)) return
 
     onModelChange(modelId)
@@ -121,28 +113,28 @@ export function EnhancedModelSelector({
   }
 
   // Mobile variant renders a simple list without popover
-  if (variant === "mobile") {
+  if (variant === 'mobile') {
     return (
       <div className="space-y-4">
         <div className="flex border-b border-zinc-700">
           <button
-            onClick={() => setActiveTab("models")}
+            onClick={() => setActiveTab('models')}
             className={cn(
-              "flex-1 px-4 py-3 text-sm font-medium transition-colors",
-              activeTab === "models"
-                ? "text-teal-400 border-b-2 border-teal-400 bg-zinc-800/50"
-                : "text-zinc-400 hover:text-zinc-200"
+              'flex-1 px-4 py-3 text-sm font-medium transition-colors',
+              activeTab === 'models'
+                ? 'text-teal-400 border-b-2 border-teal-400 bg-zinc-800/50'
+                : 'text-zinc-400 hover:text-zinc-200'
             )}
           >
             Models
           </button>
           <button
-            onClick={() => setActiveTab("extensions")}
+            onClick={() => setActiveTab('extensions')}
             className={cn(
-              "flex-1 px-4 py-3 text-sm font-medium transition-colors",
-              activeTab === "extensions"
-                ? "text-teal-400 border-b-2 border-teal-400 bg-zinc-800/50"
-                : "text-zinc-400 hover:text-zinc-200"
+              'flex-1 px-4 py-3 text-sm font-medium transition-colors',
+              activeTab === 'extensions'
+                ? 'text-teal-400 border-b-2 border-teal-400 bg-zinc-800/50'
+                : 'text-zinc-400 hover:text-zinc-200'
             )}
           >
             Extensions
@@ -150,17 +142,17 @@ export function EnhancedModelSelector({
         </div>
 
         <ScrollArea className="max-h-[400px]">
-          {activeTab === "models" && (
+          {activeTab === 'models' && (
             <div className="space-y-3">
               {availableModels.map((model) => (
                 <div
                   key={model.id}
                   className={cn(
-                    "relative p-3 rounded-lg border transition-all duration-200",
+                    'relative p-3 rounded-lg border transition-all duration-200',
                     selectedModelId === model.id
-                      ? "border-teal-500 bg-teal-500/10"
-                      : "border-zinc-700 hover:border-zinc-600 hover:bg-zinc-800/50",
-                    model.isPro && !isPro ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                      ? 'border-teal-500 bg-teal-500/10'
+                      : 'border-zinc-700 hover:border-zinc-600 hover:bg-zinc-800/50',
+                    model.isPro && !isPro ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                   )}
                   onClick={() => handleModelSelect(model.id)}
                 >
@@ -170,7 +162,9 @@ export function EnhancedModelSelector({
                         <span className="font-medium text-white">{model.name}</span>
                         {model.isPro && <Crown className="h-3 w-3 text-amber-400" />}
                         {model.supportsCustomKey && <Key className="h-3 w-3 text-zinc-400" />}
-                        {selectedModelId === model.id && <Check className="h-4 w-4 text-teal-400" />}
+                        {selectedModelId === model.id && (
+                          <Check className="h-4 w-4 text-teal-400" />
+                        )}
                       </div>
                       <p className="text-xs text-zinc-400 mb-2">{model.provider}</p>
                       <p className="text-xs text-zinc-300 mb-2">{model.description}</p>
@@ -196,7 +190,7 @@ export function EnhancedModelSelector({
                       <Input
                         type="password"
                         placeholder="Enter your API key..."
-                        value={customApiKeys[model.id] || ""}
+                        value={customApiKeys[model.id] || ''}
                         onChange={(e) => handleApiKeyChange(model.id, e.target.value)}
                         className="h-8 text-xs bg-zinc-800 border-zinc-600"
                       />
@@ -215,18 +209,22 @@ export function EnhancedModelSelector({
             </div>
           )}
 
-          {activeTab === "extensions" && (
+          {activeTab === 'extensions' && (
             <div className="space-y-3">
-              <div className={cn(
-                "relative p-3 rounded-lg border border-zinc-700",
-                !isPro && "opacity-50"
-              )}>
+              <div
+                className={cn(
+                  'relative p-3 rounded-lg border border-zinc-700',
+                  !isPro && 'opacity-50'
+                )}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Globe className="h-4 w-4 text-blue-400" />
                     <div>
                       <p className="font-medium text-white text-sm">Realtime Web Search</p>
-                      <p className="text-xs text-zinc-400">Search the web for current information</p>
+                      <p className="text-xs text-zinc-400">
+                        Search the web for current information
+                      </p>
                     </div>
                     <Crown className="h-3 w-3 text-amber-400" />
                   </div>
@@ -248,10 +246,12 @@ export function EnhancedModelSelector({
                 )}
               </div>
 
-              <div className={cn(
-                "relative p-3 rounded-lg border border-zinc-700",
-                !isPro && "opacity-50"
-              )}>
+              <div
+                className={cn(
+                  'relative p-3 rounded-lg border border-zinc-700',
+                  !isPro && 'opacity-50'
+                )}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Database className="h-4 w-4 text-purple-400" />
@@ -279,10 +279,12 @@ export function EnhancedModelSelector({
                 )}
               </div>
 
-              <div className={cn(
-                "relative p-3 rounded-lg border border-zinc-700",
-                !isPro && "opacity-50"
-              )}>
+              <div
+                className={cn(
+                  'relative p-3 rounded-lg border border-zinc-700',
+                  !isPro && 'opacity-50'
+                )}
+              >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Zap className="h-4 w-4 text-yellow-400" />
@@ -320,14 +322,14 @@ export function EnhancedModelSelector({
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button
-          variant={hasCustomKey ? "outline" : "ghost"}
+          variant={hasCustomKey ? 'outline' : 'ghost'}
           className={cn(
-            "h-10 px-3 gap-2 text-sm font-medium transition-all duration-200",
-            hasCustomKey && "border-teal-500/50 text-teal-400 hover:border-teal-400"
+            'h-10 px-3 gap-2 text-sm font-medium transition-all duration-200',
+            hasCustomKey && 'border-teal-500/50 text-teal-400 hover:border-teal-400'
           )}
         >
           <BrainCircuit className="h-4 w-4 text-teal-400" />
-          <span className="hidden sm:inline">{selectedModel?.name || "Select Model"}</span>
+          <span className="hidden sm:inline">{selectedModel?.name || 'Select Model'}</span>
           {hasCustomKey && <Key className="h-3 w-3 text-amber-400 ml-1" />}
         </Button>
       </PopoverTrigger>
@@ -341,23 +343,23 @@ export function EnhancedModelSelector({
         <div className="flex flex-col h-[70vh] md:h-[500px] max-h-[500px]">
           <div className="flex border-b border-zinc-700">
             <button
-              onClick={() => setActiveTab("models")}
+              onClick={() => setActiveTab('models')}
               className={cn(
-                "flex-1 px-4 py-3 text-sm font-medium transition-colors",
-                activeTab === "models"
-                  ? "text-teal-400 border-b-2 border-teal-400 bg-zinc-800/50"
-                  : "text-zinc-400 hover:text-zinc-200"
+                'flex-1 px-4 py-3 text-sm font-medium transition-colors',
+                activeTab === 'models'
+                  ? 'text-teal-400 border-b-2 border-teal-400 bg-zinc-800/50'
+                  : 'text-zinc-400 hover:text-zinc-200'
               )}
             >
               Models
             </button>
             <button
-              onClick={() => setActiveTab("extensions")}
+              onClick={() => setActiveTab('extensions')}
               className={cn(
-                "flex-1 px-4 py-3 text-sm font-medium transition-colors",
-                activeTab === "extensions"
-                  ? "text-teal-400 border-b-2 border-teal-400 bg-zinc-800/50"
-                  : "text-zinc-400 hover:text-zinc-200"
+                'flex-1 px-4 py-3 text-sm font-medium transition-colors',
+                activeTab === 'extensions'
+                  ? 'text-teal-400 border-b-2 border-teal-400 bg-zinc-800/50'
+                  : 'text-zinc-400 hover:text-zinc-200'
               )}
             >
               Extensions
@@ -365,17 +367,17 @@ export function EnhancedModelSelector({
           </div>
 
           <ScrollArea className="flex-1 overflow-hidden">
-            {activeTab === "models" && (
+            {activeTab === 'models' && (
               <div className="p-4 space-y-3 min-h-0">
                 {availableModels.map((model) => (
                   <div
                     key={model.id}
                     className={cn(
-                      "relative p-3 rounded-lg border transition-all duration-200",
+                      'relative p-3 rounded-lg border transition-all duration-200',
                       selectedModelId === model.id
-                        ? "border-teal-500 bg-teal-500/10"
-                        : "border-zinc-700 hover:border-zinc-600 hover:bg-zinc-800/50",
-                      model.isPro && !isPro ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                        ? 'border-teal-500 bg-teal-500/10'
+                        : 'border-zinc-700 hover:border-zinc-600 hover:bg-zinc-800/50',
+                      model.isPro && !isPro ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                     )}
                     onClick={() => handleModelSelect(model.id)}
                     onMouseEnter={() => setHoveredModel(model.id)}
@@ -387,7 +389,9 @@ export function EnhancedModelSelector({
                           <span className="font-medium text-white">{model.name}</span>
                           {model.isPro && <Crown className="h-3 w-3 text-amber-400" />}
                           {model.supportsCustomKey && <Key className="h-3 w-3 text-zinc-400" />}
-                          {selectedModelId === model.id && <Check className="h-4 w-4 text-teal-400" />}
+                          {selectedModelId === model.id && (
+                            <Check className="h-4 w-4 text-teal-400" />
+                          )}
                         </div>
                         <p className="text-xs text-zinc-400 mb-2">{model.provider}</p>
 
@@ -418,7 +422,7 @@ export function EnhancedModelSelector({
                         <Input
                           type="password"
                           placeholder="Enter your API key..."
-                          value={customApiKeys[model.id] || ""}
+                          value={customApiKeys[model.id] || ''}
                           onChange={(e) => handleApiKeyChange(model.id, e.target.value)}
                           className="h-8 text-xs bg-zinc-800 border-zinc-600"
                         />
@@ -437,18 +441,22 @@ export function EnhancedModelSelector({
               </div>
             )}
 
-            {activeTab === "extensions" && (
+            {activeTab === 'extensions' && (
               <div className="p-4 space-y-3 min-h-0">
-                <div className={cn(
-                  "relative p-3 rounded-lg border border-zinc-700",
-                  !isPro && "opacity-50"
-                )}>
+                <div
+                  className={cn(
+                    'relative p-3 rounded-lg border border-zinc-700',
+                    !isPro && 'opacity-50'
+                  )}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Globe className="h-4 w-4 text-blue-400" />
                       <div>
                         <p className="font-medium text-white text-sm">Realtime Web Search</p>
-                        <p className="text-xs text-zinc-400">Search the web for current information</p>
+                        <p className="text-xs text-zinc-400">
+                          Search the web for current information
+                        </p>
                       </div>
                       <Crown className="h-3 w-3 text-amber-400" />
                     </div>
@@ -470,10 +478,12 @@ export function EnhancedModelSelector({
                   )}
                 </div>
 
-                <div className={cn(
-                  "relative p-3 rounded-lg border border-zinc-700",
-                  !isPro && "opacity-50"
-                )}>
+                <div
+                  className={cn(
+                    'relative p-3 rounded-lg border border-zinc-700',
+                    !isPro && 'opacity-50'
+                  )}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Database className="h-4 w-4 text-purple-400" />
@@ -501,10 +511,12 @@ export function EnhancedModelSelector({
                   )}
                 </div>
 
-                <div className={cn(
-                  "relative p-3 rounded-lg border border-zinc-700",
-                  !isPro && "opacity-50"
-                )}>
+                <div
+                  className={cn(
+                    'relative p-3 rounded-lg border border-zinc-700',
+                    !isPro && 'opacity-50'
+                  )}
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Zap className="h-4 w-4 text-yellow-400" />

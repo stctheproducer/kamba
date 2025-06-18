@@ -1,5 +1,11 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { BrainCircuit } from "lucide-react"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { BrainCircuit } from 'lucide-react'
 
 export interface AIModel {
   id: string
@@ -9,24 +15,31 @@ export interface AIModel {
 }
 
 const availableModels: AIModel[] = [
-  { id: "gpt-4o-mini", name: "GPT-4o Mini", provider: "OpenAI" },
-  { id: "gpt-4o", name: "GPT-4o", provider: "OpenAI", isPro: true },
-  { id: "claude-3-haiku", name: "Claude 3 Haiku", provider: "Anthropic" },
-  { id: "claude-3-sonnet", name: "Claude 3 Sonnet", provider: "Anthropic", isPro: true },
-  { id: "openrouter/gemini-flash", name: "Gemini Flash (OpenRouter)", provider: "OpenRouter" },
-  { id: "openrouter/mistral-large", name: "Mistral Large (OpenRouter)", provider: "OpenRouter", isPro: true },
+  { id: 'gpt-4o-mini', name: 'GPT-4o Mini', provider: 'OpenAI' },
+  { id: 'gpt-4o', name: 'GPT-4o', provider: 'OpenAI', isPro: true },
+  { id: 'claude-3-haiku', name: 'Claude 3 Haiku', provider: 'Anthropic' },
+  { id: 'claude-3-sonnet', name: 'Claude 3 Sonnet', provider: 'Anthropic', isPro: true },
+  { id: 'openrouter/gemini-flash', name: 'Gemini Flash (OpenRouter)', provider: 'OpenRouter' },
+  {
+    id: 'openrouter/mistral-large',
+    name: 'Mistral Large (OpenRouter)',
+    provider: 'OpenRouter',
+    isPro: true,
+  },
 ]
 
 export function ModelSelector({
   selectedModelId,
   onModelChange,
-  userPlan = "free", // 'free', 'plus', 'pro'
+  userPlan = 'free', // 'free', 'plus', 'pro'
 }: {
   selectedModelId: string
   onModelChange: (modelId: string) => void
   userPlan?: string
 }) {
-  const accessibleModels = availableModels.filter((model) => !model.isPro || userPlan === "pro" || userPlan === "plus")
+  const accessibleModels = availableModels.filter(
+    (model) => !model.isPro || userPlan === 'pro' || userPlan === 'plus'
+  )
 
   return (
     <Select value={selectedModelId} onValueChange={onModelChange}>
@@ -43,7 +56,7 @@ export function ModelSelector({
             </div>
           </SelectItem>
         ))}
-        {availableModels.some((m) => m.isPro && userPlan !== "pro" && userPlan !== "plus") && (
+        {availableModels.some((m) => m.isPro && userPlan !== 'pro' && userPlan !== 'plus') && (
           <div className="p-2 text-xs text-zinc-400 text-center border-t border-zinc-700 mt-1">
             Upgrade to Pro for more models.
           </div>

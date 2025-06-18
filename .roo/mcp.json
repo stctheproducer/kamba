@@ -2,14 +2,8 @@
   "mcpServers": {
     "assistant-ui": {
       "command": "/Users/stctheproducer/.volta/bin/npx",
-      "args": [
-        "-y",
-        "@assistant-ui/mcp-docs-server"
-      ],
-      "alwaysAllow": [
-        "assistantUIDocs",
-        "assistantUIExamples"
-      ]
+      "args": ["-y", "@assistant-ui/mcp-docs-server"],
+      "alwaysAllow": ["assistantUIDocs", "assistantUIExamples"]
     }
   }
 }

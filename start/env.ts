@@ -158,4 +158,8 @@ export default await Env.create(new URL('../', import.meta.url), {
   |----------------------------------------------------------
   */
   LOCK_STORE: Env.schema.enum(['database', 'memory'] as const),
+
+  OPENROUTER_API_KEY: Env.schema.string(),
+
+  OPENAI_API_KEY: Env.schema.string()
 })

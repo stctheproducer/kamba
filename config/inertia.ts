@@ -16,6 +16,8 @@ const inertiaConfig = defineConfig({
     isAuthenticated: (ctx) => ctx.inertia.always(() => ctx.auth.isAuthenticated),
     appName: env.get('APP_NAME', 'Kamba'),
     authProvider: env.get('OAUTH_PROVIDER', 'github'), // sensible default
+    chatSidebarCollapsed: (ctx) =>
+      ctx.inertia.always(() => ctx.request.cookie('sidebar-collapsed', 'false') === 'true'),
   },
 
   /**

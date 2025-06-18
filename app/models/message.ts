@@ -29,7 +29,7 @@ export default class Message extends compose(BaseModel, SoftDeletes) {
   declare role: 'system' | 'user' | 'assistant' | 'tool'
 
   @column()
-  declare content: string
+  declare content: any
 
   @column()
   declare metadata: any | null

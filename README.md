@@ -41,10 +41,12 @@ For a detailed development roadmap and the current status of all features, pleas
 - **Database**: SQLite (main data, cache, limiter), Weaviate (vector DB)
 - **Local-First Storage & Sync**: LiveStore, `adonisjs-websocket`
 - **Authentication**:
+
   - **Logto**: A complete authentication solution with enterprise-grade security features
   - **GitHub OAuth**: Quick and easy sign-in using your GitHub account
 
   You can choose either authentication method during the sign-up process. Both options provide secure access to all of Kamba's features.
+
 - **Storage**: Cloudflare R2
 - **Caching**: SQLite (via `@adonisjs/cache`)
 - **Rate Limiting**: SQLite (via `@adonisjs/limiter`)
@@ -205,7 +207,7 @@ pnpm start  # Uses dotenvx with production env
 ```
 
 !!! note
-    Using dotenvx is optional but recommended for secure environment variable management. You may opt to use other methods if preferred.
+Using dotenvx is optional but recommended for secure environment variable management. You may opt to use other methods if preferred.
 
 ### Docker Support
 

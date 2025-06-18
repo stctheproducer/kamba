@@ -7,11 +7,11 @@
 import type { MakeTuyauRequest, MakeTuyauResponse } from '@tuyau/utils/types'
 import type { InferInput } from '@vinejs/vine/types'
 
-type AuthLogtoRedirectGetHead = {
+type AuthIdRedirectGetHead = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/auth_controller.ts').default['login'], false>
 }
-type AuthLogtoCallbackGetHead = {
+type AuthIdCallbackGetHead = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/auth_controller.ts').default['handleCallback'], false>
 }
@@ -19,24 +19,32 @@ type AuthLogoutPost = {
   request: unknown
   response: MakeTuyauResponse<import('../app/controllers/auth_controller.ts').default['logout'], false>
 }
-type ChatGetHead = {
+type ApiPreferencesIdPut = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/preference.ts')['upsertPreferenceValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/preferences_controller.ts').default['update'], true>
+}
+type ChatIdGetHead = {
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/chat.ts')['chatIndexValidator']>>
+  response: MakeTuyauResponse<import('../app/controllers/chats_controller.ts').default['index'], true>
+}
+type ApiChatPost = {
   request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/chats_controller.ts').default['index'], false>
+  response: MakeTuyauResponse<import('../app/controllers/chats_controller.ts').default['handleChat'], false>
 }
 export interface ApiDefinition {
   'auth': {
-    'logto': {
+    ':provider': {
       'redirect': {
         '$url': {
         };
-        '$get': AuthLogtoRedirectGetHead;
-        '$head': AuthLogtoRedirectGetHead;
+        '$get': AuthIdRedirectGetHead;
+        '$head': AuthIdRedirectGetHead;
       };
       'callback': {
         '$url': {
         };
-        '$get': AuthLogtoCallbackGetHead;
-        '$head': AuthLogtoCallbackGetHead;
+        '$get': AuthIdCallbackGetHead;
+        '$head': AuthIdCallbackGetHead;
       };
     };
     'logout': {
@@ -45,11 +53,27 @@ export interface ApiDefinition {
       '$post': AuthLogoutPost;
     };
   };
-  'chat': {
-    '$url': {
+  'api': {
+    'preferences': {
+      ':preferenceId': {
+        '$url': {
+        };
+        '$put': ApiPreferencesIdPut;
+      };
     };
-    '$get': ChatGetHead;
-    '$head': ChatGetHead;
+    'chat': {
+      '$url': {
+      };
+      '$post': ApiChatPost;
+    };
+  };
+  'chat': {
+    ':id?': {
+      '$url': {
+      };
+      '$get': ChatIdGetHead;
+      '$head': ChatIdGetHead;
+    };
   };
 }
 const routes = [
@@ -62,7 +86,7 @@ const routes = [
   },
   {
     params: [],
-    name: 'home',
+    name: 'home.redirect',
     path: '/',
     method: ["GET","HEAD"],
     types: {} as unknown,
@@ -75,18 +99,18 @@ const routes = [
     types: {} as unknown,
   },
   {
-    params: [],
-    name: 'auth.logto.redirect',
-    path: '/auth/logto/redirect',
+    params: ["provider"],
+    name: 'auth.oauth.redirect',
+    path: '/auth/:provider/redirect',
     method: ["GET","HEAD"],
-    types: {} as AuthLogtoRedirectGetHead,
+    types: {} as AuthIdRedirectGetHead,
   },
   {
-    params: [],
-    name: 'auth.logto.callback',
-    path: '/auth/logto/callback',
+    params: ["provider"],
+    name: 'auth.oauth.callback',
+    path: '/auth/:provider/callback',
     method: ["GET","HEAD"],
-    types: {} as AuthLogtoCallbackGetHead,
+    types: {} as AuthIdCallbackGetHead,
   },
   {
     params: [],
@@ -96,11 +120,25 @@ const routes = [
     types: {} as AuthLogoutPost,
   },
   {
-    params: [],
+    params: ["preferenceId"],
+    name: 'api.preferences.update',
+    path: '/api/preferences/:preferenceId',
+    method: ["PUT"],
+    types: {} as ApiPreferencesIdPut,
+  },
+  {
+    params: ["id"],
     name: 'chat.chat',
-    path: '/chat',
+    path: '/chat/:id?',
     method: ["GET","HEAD"],
-    types: {} as ChatGetHead,
+    types: {} as ChatIdGetHead,
+  },
+  {
+    params: [],
+    name: 'api.chat.send',
+    path: '/api/chat',
+    method: ["POST"],
+    types: {} as ApiChatPost,
   },
   {
     params: [],

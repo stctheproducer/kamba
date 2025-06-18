@@ -1,12 +1,9 @@
-import type { FC } from "react";
-import {
-  ThreadListItemPrimitive,
-  ThreadListPrimitive,
-} from "@assistant-ui/react";
-import { ArchiveIcon, PlusIcon } from "lucide-react";
+import type { FC } from 'react'
+import { ThreadListItemPrimitive, ThreadListPrimitive } from '@assistant-ui/react'
+import { ArchiveIcon, PlusIcon } from 'lucide-react'
 
-import { Button } from "@/components/ui/button";
-import { TooltipIconButton } from "@/components/assistant-ui/tooltip-icon-button";
+import { Button } from '@/components/ui/button'
+import { TooltipIconButton } from '@/components/assistant-ui/tooltip-icon-button'
 
 export const ThreadList: FC = () => {
   return (
@@ -14,23 +11,26 @@ export const ThreadList: FC = () => {
       <ThreadListNew />
       <ThreadListItems />
     </ThreadListPrimitive.Root>
-  );
-};
+  )
+}
 
 const ThreadListNew: FC = () => {
   return (
     <ThreadListPrimitive.New asChild>
-      <Button className="data-[active]:bg-zinc-800 hover:bg-zinc-800 flex items-center justify-start gap-1 rounded-lg px-2.5 py-2 text-start text-zinc-100" variant="ghost">
+      <Button
+        className="data-[active]:bg-zinc-800 hover:bg-zinc-800 flex items-center justify-start gap-1 rounded-lg px-2.5 py-2 text-start text-zinc-100"
+        variant="ghost"
+      >
         <PlusIcon />
         New Thread
       </Button>
     </ThreadListPrimitive.New>
-  );
-};
+  )
+}
 
 const ThreadListItems: FC = () => {
-  return <ThreadListPrimitive.Items components={{ ThreadListItem }} />;
-};
+  return <ThreadListPrimitive.Items components={{ ThreadListItem }} />
+}
 
 const ThreadListItem: FC = () => {
   return (
@@ -40,27 +40,27 @@ const ThreadListItem: FC = () => {
       </ThreadListItemPrimitive.Trigger>
       <ThreadListItemArchive />
     </ThreadListItemPrimitive.Root>
-  );
-};
+  )
+}
 
 const ThreadListItemTitle: FC = () => {
   return (
     <p className="text-sm text-zinc-100">
       <ThreadListItemPrimitive.Title fallback="New Chat" />
     </p>
-  );
-};
+  )
+}
 
 const ThreadListItemArchive: FC = () => {
   return (
     <ThreadListItemPrimitive.Archive asChild>
       <TooltipIconButton
-        className="hover:text-primary text-zinc-400 ml-auto mr-3 size-4 p-0"
+        className="hover:text-white text-zinc-400 ml-auto mr-3 size-4 p-3"
         variant="ghost"
         tooltip="Archive thread"
       >
         <ArchiveIcon />
       </TooltipIconButton>
     </ThreadListItemPrimitive.Archive>
-  );
-};
+  )
+}

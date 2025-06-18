@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,12 +7,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { PlusCircle, ChevronDown, Search, Zap, MessageSquare } from "lucide-react"
-import type { CustomPrompt } from "@/types/prompt_types"
-import { Badge } from "@/components/ui/badge"
+} from '@/components/ui/dropdown-menu'
+import { Input } from '@/components/ui/input'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { PlusCircle, ChevronDown, Search, Zap, MessageSquare } from 'lucide-react'
+import type { CustomPrompt } from '@/types/prompt_types'
+import { Badge } from '@/components/ui/badge'
 
 interface NewChatDropdownProps {
   onNewChat: () => void
@@ -29,14 +29,18 @@ export function NewChatDropdown({
   adminPrompts,
   userPlan,
 }: NewChatDropdownProps) {
-  const [searchTerm, setSearchTerm] = useState("")
+  const [searchTerm, setSearchTerm] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
-  const [dropdownHeight, setDropdownHeight] = useState("auto")
+  const [dropdownHeight, setDropdownHeight] = useState('auto')
 
   // Get all unique categories
   const allCategories = [
-    ...new Set([...adminPrompts.map((p) => p.category), ...userPrompts.map((p) => p.category)].filter(Boolean)),
+    ...new Set(
+      [...adminPrompts.map((p) => p.category), ...userPrompts.map((p) => p.category)].filter(
+        Boolean
+      )
+    ),
   ] as string[]
 
   // Filter prompts based on search term and category
@@ -44,20 +48,20 @@ export function NewChatDropdown({
     (prompt) =>
       (prompt.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         prompt.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (!selectedCategory || prompt.category === selectedCategory),
+      (!selectedCategory || prompt.category === selectedCategory)
   )
 
   const filteredAdminPrompts = adminPrompts.filter(
     (prompt) =>
       (prompt.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         prompt.description.toLowerCase().includes(searchTerm.toLowerCase())) &&
-      (!selectedCategory || prompt.category === selectedCategory),
+      (!selectedCategory || prompt.category === selectedCategory)
   )
 
   const handlePromptSelect = (prompt: CustomPrompt) => {
     onNewChatWithPrompt(prompt)
     setIsOpen(false)
-    setSearchTerm("")
+    setSearchTerm('')
     setSelectedCategory(null)
   }
 
@@ -69,7 +73,7 @@ export function NewChatDropdown({
   // Clear search when dropdown closes
   useEffect(() => {
     if (!isOpen) {
-      setSearchTerm("")
+      setSearchTerm('')
       setSelectedCategory(null)
     }
   }, [isOpen])
@@ -83,8 +87,8 @@ export function NewChatDropdown({
     }
 
     handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   return (
@@ -92,29 +96,33 @@ export function NewChatDropdown({
       <DropdownMenuTrigger asChild>
         <Button className="w-full gap-2">
           <PlusCircle className="h-4 w-4" />
-          New Chat
+          Chat Presets
           <ChevronDown className="h-4 w-4 ml-auto" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-80 bg-zinc-900 border-zinc-700"
         align="start"
-        style={{ maxHeight: dropdownHeight, overflow: "hidden" }}
+        style={{ maxHeight: dropdownHeight, overflow: 'hidden' }}
       >
         <DropdownMenuLabel className="flex items-center gap-2 text-white">
           <MessageSquare className="h-4 w-4" />
-          Start New Chat
+          Start New Thread
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="bg-zinc-700" />
 
         <div className="p-2">
-          <Button onClick={handleNewChat} variant="ghost" className="w-full justify-start gap-2 text-white hover:bg-zinc-800 hover:text-white">
+          <Button
+            onClick={handleNewChat}
+            variant="ghost"
+            className="w-full justify-start gap-2 text-white hover:bg-zinc-800 hover:text-white"
+          >
             <PlusCircle className="h-4 w-4" />
-            Blank Chat
+            New Thread
           </Button>
         </div>
 
-        {(adminPrompts.length > 0 || (userPrompts.length > 0 && userPlan !== "free")) && (
+        {(adminPrompts.length > 0 || (userPrompts.length > 0 && userPlan !== 'free')) && (
           <>
             <DropdownMenuSeparator className="bg-zinc-700" />
             <div className="p-2 space-y-2">
@@ -131,11 +139,11 @@ export function NewChatDropdown({
               {allCategories.length > 0 && (
                 <div className="flex flex-wrap gap-1">
                   <Button
-                    variant={selectedCategory === null ? "default" : "outline"}
+                    variant={selectedCategory === null ? 'default' : 'outline'}
                     size="sm"
                     className={`h-7 text-xs ${selectedCategory === null
-                      ? "bg-white text-black hover:bg-white/90"
-                      : "border-zinc-600 text-zinc-300 bg-zinc-700 hover:text-white"
+                        ? 'bg-white text-black hover:bg-white/90'
+                        : 'border-zinc-600 text-zinc-300 bg-zinc-700 hover:text-white'
                       }`}
                     onClick={() => setSelectedCategory(null)}
                   >
@@ -144,13 +152,15 @@ export function NewChatDropdown({
                   {allCategories.map((category) => (
                     <Button
                       key={category}
-                      variant={selectedCategory === category ? "default" : "outline"}
+                      variant={selectedCategory === category ? 'default' : 'outline'}
                       size="sm"
                       className={`h-7 text-xs ${selectedCategory === category
-                        ? "bg-white text-black hover:bg-white/90"
-                        : "border-zinc-600 text-zinc-300 bg-zinc-700 hover:text-white"
+                          ? 'bg-white text-black hover:bg-white/90'
+                          : 'border-zinc-600 text-zinc-300 bg-zinc-700 hover:text-white'
                         }`}
-                      onClick={() => setSelectedCategory(category === selectedCategory ? null : category)}
+                      onClick={() =>
+                        setSelectedCategory(category === selectedCategory ? null : category)
+                      }
                     >
                       {category}
                     </Button>
@@ -191,10 +201,12 @@ export function NewChatDropdown({
           )}
 
           {/* User Prompts */}
-          {filteredUserPrompts.length > 0 && userPlan !== "free" && (
+          {filteredUserPrompts.length > 0 && userPlan !== 'free' && (
             <>
               {filteredAdminPrompts.length > 0 && <DropdownMenuSeparator className="bg-zinc-700" />}
-              <DropdownMenuLabel className="text-xs text-white">My Custom Prompts</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-xs text-white">
+                My Custom Prompts
+              </DropdownMenuLabel>
               {filteredUserPrompts.map((prompt) => (
                 <DropdownMenuItem
                   key={prompt.id}
@@ -218,11 +230,13 @@ export function NewChatDropdown({
 
           {/* No results */}
           {searchTerm && filteredAdminPrompts.length === 0 && filteredUserPrompts.length === 0 && (
-            <div className="p-3 text-center text-white text-sm">No prompts found matching "{searchTerm}"</div>
+            <div className="p-3 text-center text-white text-sm">
+              No prompts found matching "{searchTerm}"
+            </div>
           )}
 
           {/* Free user message */}
-          {userPlan === "free" && userPrompts.length > 0 && (
+          {userPlan === 'free' && userPrompts.length > 0 && (
             <div className="p-3 text-xs text-white border-t border-zinc-700">
               Upgrade to access your custom prompts in new chats
             </div>

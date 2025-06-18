@@ -1,5 +1,14 @@
-import { Html, Head, Body, Container, Text, Section, Preview, Tailwind } from "@react-email/components"
-import { OTPDisplay, ActionButton, SecurityNotice } from "../components/auth/shared"
+import {
+  Html,
+  Head,
+  Body,
+  Container,
+  Text,
+  Section,
+  Preview,
+  Tailwind,
+} from '@react-email/components'
+import { OTPDisplay, ActionButton, SecurityNotice } from '../components/auth/shared'
 
 interface AccountVerificationEmailProps {
   userEmail?: string
@@ -8,9 +17,9 @@ interface AccountVerificationEmailProps {
 }
 
 export default function AccountVerificationEmail({
-  userEmail = "user@example.com",
-  otp = "123456",
-  verificationUrl = "https://example.com/verify",
+  userEmail = 'user@example.com',
+  otp = '123456',
+  verificationUrl = 'https://example.com/verify',
 }: AccountVerificationEmailProps) {
   return (
     <Html>
@@ -27,8 +36,8 @@ export default function AccountVerificationEmail({
             </Section>
 
             <Text className="text-base text-slate-700 leading-relaxed m-0 mb-6">
-              Hi there! Welcome to our platform. To complete your account setup and ensure the security of your account,
-              please verify your email address using the code below.
+              Hi there! Welcome to our platform. To complete your account setup and ensure the
+              security of your account, please verify your email address using the code below.
             </Text>
 
             <OTPDisplay otp={otp} />

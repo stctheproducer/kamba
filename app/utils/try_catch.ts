@@ -1,16 +1,20 @@
+import { Exception } from '@adonisjs/core/exceptions'
+
 // Define the result tuple type
-type TryCatchResult<T, E> = [T | null, E | null]
+type Result<T, E> = [T | null, E | null]
 
 /**
  * Wraps an async function call in a try-catch block
  * and returns a tuple with the result or error.
  */
-export async function tryCatch<T, E>(fn: () => Promise<T>): Promise<TryCatchResult<T, E>> {
+export async function tryCatch<T = any, E = Error | Exception>(
+  operation: () => Promise<T>
+): Promise<Result<T, E>> {
   try {
-    const result = await fn()
-    return [result, null]
+    const data = await operation()
+    return [data, null] as const
   } catch (error) {
-    return [null, error as E]
+    return [null, error as E] as const
   }
 }
 
@@ -18,10 +22,10 @@ export async function tryCatch<T, E>(fn: () => Promise<T>): Promise<TryCatchResu
  * Wraps a synchronous function call in a try-catch block
  * and returns a tuple with the result or error.
  */
-export function tryCatchSync<T, E>(fn: () => T): TryCatchResult<T, E> {
+export function tryCatchSync<T = any, E = Error | Exception>(operation: () => T): Result<T, E> {
   try {
-    const result = fn()
-    return [result, null]
+    const data = operation()
+    return [data, null]
   } catch (error) {
     return [null, error as E]
   }

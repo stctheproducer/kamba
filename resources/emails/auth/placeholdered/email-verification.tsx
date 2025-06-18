@@ -11,7 +11,7 @@ import {
   Text,
   Hr,
   Tailwind,
-} from "@react-email/components"
+} from '@react-email/components'
 
 interface EmailVerificationProps {
   userFirstName?: string
@@ -20,9 +20,9 @@ interface EmailVerificationProps {
 }
 
 export const EmailVerificationTailwind = ({
-  userFirstName = "",
-  verificationUrl = "https://example.com/verify?token=abc123",
-  supportUrl = "https://example.com/support",
+  userFirstName = '',
+  verificationUrl = 'https://example.com/verify?token=abc123',
+  supportUrl = 'https://example.com/support',
 }: EmailVerificationProps) => (
   <Html>
     <Head />
@@ -32,12 +32,12 @@ export const EmailVerificationTailwind = ({
         theme: {
           extend: {
             colors: {
-              brand: "#0097a7",
-              "brand-50": "#f0fdff",
-              "brand-100": "#ccfbf1",
-              "brand-500": "#0097a7",
-              "brand-600": "#0891b2",
-              "brand-700": "#0e7490",
+              'brand': '#0097a7',
+              'brand-50': '#f0fdff',
+              'brand-100': '#ccfbf1',
+              'brand-500': '#0097a7',
+              'brand-600': '#0891b2',
+              'brand-700': '#0e7490',
             },
           },
         },
@@ -60,8 +60,9 @@ export const EmailVerificationTailwind = ({
 
           {/* Main Content */}
           <Text className="text-slate-800 text-base leading-7 my-4">
-            Thanks for signing up! We're excited to have you on board. To complete your account setup and ensure you
-            receive important updates, please verify your email address by clicking the button below.
+            Thanks for signing up! We're excited to have you on board. To complete your account
+            setup and ensure you receive important updates, please verify your email address by
+            clicking the button below.
           </Text>
 
           {/* CTA Button */}
@@ -76,15 +77,16 @@ export const EmailVerificationTailwind = ({
 
           {/* Security Notice */}
           <Text className="text-slate-800 text-base leading-7 my-4">
-            This verification link will expire in 24 hours for security reasons. If you didn't create an account with
-            us, you can safely ignore this email.
+            This verification link will expire in 24 hours for security reasons. If you didn't
+            create an account with us, you can safely ignore this email.
           </Text>
 
           <Hr className="border-slate-200 my-8" />
 
           {/* Fallback Instructions */}
           <Text className="text-slate-500 text-sm leading-6 my-4">
-            If you're having trouble with the button above, copy and paste the URL below into your web browser:
+            If you're having trouble with the button above, copy and paste the URL below into your
+            web browser:
           </Text>
 
           <Text className="text-sm my-4 break-all">
@@ -97,10 +99,10 @@ export const EmailVerificationTailwind = ({
 
           {/* Support Link */}
           <Text className="text-slate-500 text-sm leading-6 my-4">
-            Need help? Visit our{" "}
+            Need help? Visit our{' '}
             <Link href={supportUrl} className="text-brand underline">
               Help Center
-            </Link>{" "}
+            </Link>{' '}
             or contact our support team.
           </Text>
 

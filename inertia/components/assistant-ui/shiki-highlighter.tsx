@@ -1,17 +1,14 @@
-import { FC } from "react";
-import ShikiHighlighter, { type ShikiHighlighterProps } from "react-shiki";
-import type { SyntaxHighlighterProps as AUIProps } from "@assistant-ui/react-markdown";
-import { cn } from "@/lib/utils";
+import { FC } from 'react'
+import ShikiHighlighter, { type ShikiHighlighterProps } from 'react-shiki'
+import type { SyntaxHighlighterProps as AUIProps } from '@assistant-ui/react-markdown'
+import { cn } from '@/lib/utils'
 
 /**
  * Props for the SyntaxHighlighter component
  */
-export type HighlighterProps = Omit<
-  ShikiHighlighterProps,
-  "children" | "theme"
-> & {
-  theme?: ShikiHighlighterProps["theme"];
-} & Pick<AUIProps, "node" | "components" | "language" | "code">;
+export type HighlighterProps = Omit<ShikiHighlighterProps, 'children' | 'theme'> & {
+  theme?: ShikiHighlighterProps['theme']
+} & Pick<AUIProps, 'node' | 'components' | 'language' | 'code'>
 
 /**
  * SyntaxHighlighter component, using react-shiki
@@ -27,7 +24,7 @@ export type HighlighterProps = Omit<
 export const SyntaxHighlighter: FC<HighlighterProps> = ({
   code,
   language,
-  theme = "github-dark",
+  theme = 'github-dark',
   className,
   addDefaultStyles = false, // assistant-ui requires custom base styles
   showLanguage = false, // assistant-ui/react-markdown handles language labels
@@ -35,7 +32,8 @@ export const SyntaxHighlighter: FC<HighlighterProps> = ({
   components: _components,
   ...props
 }) => {
-  const BASE_STYLES = "[&_pre]:overflow-x-auto [&_pre]:rounded-b-lg [&_pre]:bg-zinc-950 [&_pre]:p-4 [&_pre]:text-zinc-100";
+  const BASE_STYLES =
+    '[&_pre]:overflow-x-auto [&_pre]:rounded-b-lg [&_pre]:bg-zinc-950 [&_pre]:p-4 [&_pre]:text-zinc-100'
 
   return (
     <ShikiHighlighter
@@ -48,7 +46,7 @@ export const SyntaxHighlighter: FC<HighlighterProps> = ({
     >
       {code}
     </ShikiHighlighter>
-  );
-};
+  )
+}
 
-SyntaxHighlighter.displayName = "SyntaxHighlighter";
+SyntaxHighlighter.displayName = 'SyntaxHighlighter'

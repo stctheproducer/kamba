@@ -1,20 +1,24 @@
-import * as React from "react"
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Link } from "@inertiajs/react"
+import * as React from 'react'
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Link } from '@inertiajs/react'
 import { Link as TuyauLink } from '@tuyau/inertia/react'
-import { usePage } from "@inertiajs/react"
-import { SharedProps } from "@adonisjs/inertia/types"
-import { Bot, Menu, X } from "lucide-react"
+import { usePage } from '@inertiajs/react'
+import { SharedProps } from '@adonisjs/inertia/types'
+import { Bot, Menu, X } from 'lucide-react'
+import { useChatRuntime } from '@assistant-ui/react-ai-sdk'
+import { AssistantRuntimeProvider } from '@assistant-ui/react'
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+  const runtime = useChatRuntime({
+    api: '/api/chat',
+  })
+
   return (
-    <>
+    <AssistantRuntimeProvider runtime={runtime}>
       <TopNavigation />
-      <main className="antialiased">
-        {children}
-      </main>
-    </>
+      <div className="antialiased">{children}</div>
+    </AssistantRuntimeProvider>
   )
 }
 
@@ -23,8 +27,8 @@ const TopNavigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const navigationLinks = [
-    { name: "home", href: '/', label: "Home" },
-    { name: 'chat.chat', href: '/chat', label: "Chat" }
+    { name: 'home', href: '/', label: 'Home' },
+    { name: 'chat.chat', href: '/chat', label: 'Chat' },
   ] as const
 
   return (
@@ -34,7 +38,10 @@ const TopNavigation = () => {
           {/* Logo and Brand */}
           <div className="flex items-center gap-2">
             <Bot className="w-8 h-8 text-primary" />
-            <Link href="/" className="text-xl font-bold text-white hover:text-primary transition-colors">
+            <Link
+              href="/"
+              className="text-xl font-bold text-white hover:text-primary transition-colors"
+            >
               Kamba
             </Link>
           </div>
@@ -62,7 +69,10 @@ const TopNavigation = () => {
               </Link>
             ) : (
               <TuyauLink route="auth.logout">
-                <Button variant="outline" className="text-zinc-300 hover:text-white border-zinc-700">
+                <Button
+                  variant="outline"
+                  className="text-zinc-300 hover:text-white border-zinc-700"
+                >
                   Logout
                 </Button>
               </TuyauLink>
@@ -95,14 +105,23 @@ const TopNavigation = () => {
               ))}
               <div className="flex flex-col gap-2 pt-4 border-t border-zinc-800">
                 {!props.isAuthenticated ? (
-                  <Link href={`/auth/${props.authProvider}/redirect`} onClick={() => setIsMenuOpen(false)}>
-                    <Button variant="ghost" className="w-full justify-start text-zinc-300 hover:text-white">
+                  <Link
+                    href={`/auth/${props.authProvider}/redirect`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Button
+                      variant="ghost"
+                      className="w-full justify-start text-zinc-300 hover:text-white"
+                    >
                       Sign In
                     </Button>
                   </Link>
                 ) : (
                   <TuyauLink route="auth.logout" onClick={() => setIsMenuOpen(false)}>
-                    <Button variant="outline" className="w-full justify-start text-zinc-300 hover:text-white border-zinc-700">
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start text-zinc-300 hover:text-white border-zinc-700"
+                    >
                       Logout
                     </Button>
                   </TuyauLink>

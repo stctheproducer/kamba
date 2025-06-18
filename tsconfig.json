@@ -4,21 +4,11 @@
     "rootDir": "./",
     "outDir": "./build",
     "paths": {
-      "#audit_resolvers/*": [
-        "./app/audit_resolvers/*.js"
-      ],
-      "#utils/*": [
-        "./app/utils/*.js"
-      ],
-      "#emails/*": [
-        "./app/emails/*.js"
-      ],
-      "#drivers/*": [
-        "./app/drivers/*.js"
-      ],
-      "@/*": [
-        "./inertia/*"
-      ]
+      "#audit_resolvers/*": ["./app/audit_resolvers/*.js"],
+      "#utils/*": ["./app/utils/*.js"],
+      "#emails/*": ["./app/emails/*.js"],
+      "#drivers/*": ["./app/drivers/*.js"],
+      "@/*": ["./inertia/*"]
     }
   },
   "exclude": [

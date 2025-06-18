@@ -21,12 +21,12 @@ export default {
       autorestart: true,
       watch: '.',
       env: {
-        NODE_ENV: "development"
+        NODE_ENV: 'development',
       },
       env_production: {
-        NODE_ENV: "production"
+        NODE_ENV: 'production',
       },
-    }
+    },
   ],
 
   // deploy: {
@@ -41,4 +41,4 @@ export default {
   //     'pre-setup': ''
   //   }
   // }
-};
+}

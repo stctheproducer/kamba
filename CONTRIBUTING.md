@@ -95,17 +95,20 @@ Kamba follows a service-oriented architecture:
 We use a feature branch workflow:
 
 1. **Ensure your fork is up-to-date**:
+
    ```bash
    git checkout develop
    git pull upstream develop
    ```
 
 2. **Create a new branch** for your contribution:
+
    ```bash
    git checkout -b <branch-type>/<descriptive-name>
    ```
-   
+
    Branch types:
+
    - `feature/` - For new features
    - `fix/` - For bug fixes
    - `docs/` - For documentation changes
@@ -116,6 +119,7 @@ We use a feature branch workflow:
 3. **Make your changes** and commit them following our [commit message guidelines](#commit-message-guidelines)
 
 4. **Push your branch** to your fork:
+
    ```bash
    git push origin <your-branch-name>
    ```
@@ -226,12 +230,14 @@ All contributions go through a code review process:
 ### Review Expectations
 
 As a reviewer:
+
 - Be respectful and constructive
 - Focus on code quality, correctness, and adherence to project standards
 - Provide specific, actionable feedback
 - Respond to review requests within a reasonable timeframe
 
 As a contributor:
+
 - Be receptive to feedback
 - Explain your reasoning when discussing suggestions
 - Make requested changes or discuss alternatives
@@ -267,4 +273,3 @@ If you need help with contributing:
 ---
 
 Thank you for contributing to Kamba! Your efforts help make this project better for everyone.
-
