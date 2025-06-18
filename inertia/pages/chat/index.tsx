@@ -27,7 +27,7 @@ import { ChatIndexPage } from '@/types/chat'
 import type { CustomPrompt } from '@/types/prompt_types'
 import { AssistantRuntimeProvider } from '@assistant-ui/react'
 import { useChatRuntime } from '@assistant-ui/react-ai-sdk'
-import { SharedProps } from '@adonisjs/inertia/types'
+// import { SharedProps } from '@adonisjs/inertia/types'
 
 // interface ChatPageProps {
 //   user?: {

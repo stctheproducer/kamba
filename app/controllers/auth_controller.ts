@@ -3,7 +3,7 @@ import UnauthorizedException from '#exceptions/unauthorized_exception'
 import User from '#models/user'
 import { tryCatch } from '#utils/try_catch'
 import type { HttpContext } from '@adonisjs/core/http'
-import router from '@adonisjs/core/services/router'
+// import router from '@adonisjs/core/services/router'
 // import { v7 as uuidv7 } from 'uuid'
 
 export default class AuthController {
@@ -26,7 +26,7 @@ export default class AuthController {
   async handleCallback({
     ally,
     request,
-    inertia,
+    // inertia,
     response,
     auth,
     logger: parentLogger,

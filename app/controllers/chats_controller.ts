@@ -7,7 +7,7 @@ import {
   // chatMessageSchema
 } from '#validators/chat'
 // import { errors } from '@vinejs/vine'
-import { v7 as uuidv7 } from 'uuid'
+// import { v7 as uuidv7 } from 'uuid'
 // import BadRequestException from '#exceptions/bad_request_exception'
 import ServerErrorException from '#exceptions/server_error_exception'
 import ProblemException from '#exceptions/problem_exception'
