@@ -146,7 +146,7 @@ pnpm install
 cp .env.example .env
 ```
 
-Edit the `.env` file with your configuration details, including paths for the SQLite files and external service credentials, e.g. OPENAI_API_KEY, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, and GITHUB_REDIRECT_URI.
+Edit the `.env` file with your configuration details, including paths for the SQLite files and external service credentials, e.g. OPENAI_API_KEY, GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, and GITHUB_REDIRECT_URI. You will need to [create a GitHub OAuth app](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/creating-an-oauth-app) for the GitHub credentials.
 
 4. Generate the projects `APP_KEY` secret using the following command
 
@@ -161,6 +161,16 @@ mkdir tmp
 node ace migration:run
 node ace migration:run --connection=limiter
 ```
+
+6. Start the development server
+
+```bash
+pnpm dev
+```
+
+7. Open `http://127.0.0.1:3333` in your browser and login with GitHub
+
+8. Start chatting!
 
 ### Environment Variables with dotenvx
 
