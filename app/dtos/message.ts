@@ -5,6 +5,7 @@ import ChatDto from '#dtos/chat'
 export default class MessageDto extends BaseModelDto {
   declare id: string
   declare chatId: string
+  declare responseId: string | null
   declare parentMessageId: string | null
   declare role: 'system' | 'user' | 'assistant' | 'tool'
   declare content: any
@@ -22,6 +23,7 @@ export default class MessageDto extends BaseModelDto {
     if (!message) return
     this.id = message.id
     this.chatId = message.chatId
+    this.responseId = message.responseId
     this.parentMessageId = message.parentMessageId
     this.role = message.role
     this.content = message.content

@@ -23,6 +23,9 @@ export default class Message extends compose(BaseModel, SoftDeletes) {
   declare chatId: string
 
   @column()
+  declare responseId: string | null
+
+  @column()
   declare parentMessageId: string | null
 
   @column()

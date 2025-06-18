@@ -413,7 +413,7 @@ const ChatPage = () => {
                     <TooltipContent>
                       <div className="text-sm">
                         <div className="font-medium">{user.name}</div>
-                        <div className="text-zinc-400">{user.email}</div>
+                        <div className="text-zinc-100">{user.email}</div>
                       </div>
                     </TooltipContent>
                   </Tooltip>

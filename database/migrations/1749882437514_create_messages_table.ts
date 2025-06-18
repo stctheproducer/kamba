@@ -5,7 +5,8 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('id').primary() // UUID primary key
+      table.uuid('id').primary()
+      table.string('response_id').nullable()
       table.uuid('chat_id').references('chats.id').onDelete('CASCADE').notNullable()
       table.uuid('parent_message_id').references('messages.id').onDelete('CASCADE').nullable() // For branching
       table.string('role').notNullable() // 'system', 'user', 'assistant', 'tool'

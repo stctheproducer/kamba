@@ -15,6 +15,7 @@ import Message from '#models/message'
 import Chat from '#models/chat'
 import User from '#models/user'
 import app from '@adonisjs/core/services/app'
+import { Exception } from '@adonisjs/core/exceptions'
 
 export default class ChatsController {
   async index({ inertia, request }: HttpContext) {
@@ -74,6 +75,7 @@ export default class ChatsController {
 
     const [newChat, createChatError] = await tryCatch(async () => {
       const chat = new Chat()
+      chat.id = chatId
       // TODO: Change this to the authenticated user
       chat.userId = testUserId
       chat.title = null // To be replaced by AI generated title
@@ -93,6 +95,7 @@ export default class ChatsController {
       )
     }
     chatRecord = newChat!
+    response.header('X-Chat-Id', chatRecord.id)
     logger.debug({ chatRecord }, 'New chat created (mocked)')
 
     // Save the user message linked to the new chat
@@ -100,12 +103,14 @@ export default class ChatsController {
       const message = new Message()
       message.chatId = chatRecord.id
       message.role = 'user'
-      message.content = latestUserMessage.content
+      message.content = JSON.stringify(latestUserMessage.content)
       await message.save()
       return message
     })
 
-    if (!savedUserMessage && saveUserMessageError) {
+    logger.debug(savedUserMessage, 'This is the saved user message')
+
+    if (saveUserMessageError) {
       logger.error(
         { error: saveUserMessageError, chatId: chatRecord.id },
         'Failed to save user message'
@@ -127,7 +132,6 @@ export default class ChatsController {
     // Create a placeholder AI message record *before* streaming
     const [placeholderAIMessage, savePlaceholderError] = await tryCatch(async () => {
       const message = new Message()
-      message.id = uuidv7() // Generate UUID
       message.chatId = chatRecord!.id
       message.role = 'assistant' // Assuming assistant response
       message.content = '' // Start empty
@@ -164,20 +168,44 @@ export default class ChatsController {
         model: openai('gpt-3.5-turbo'),
         // @ts-ignore
         messages: incomingMessages,
-        onError(error) {
-          logger.error(error, 'Error during AI streaming after validation')
-        },
+        // onError(error) {
+        //   logger.error(error, 'Error during AI streaming after validation')
+        // },
         // onChunk: (chunk) => {
         //   logger.debug({ chunk }, 'Received chunk from AI streamText')
         // },
-        // onFinish: (result) => {
-        //   logger.debug({ result }, 'Received final from AI streamText')
-        // },
+        onFinish: (result) => {
+          const latestMessage = result.response.messages[result.response.messages.length - 1]
+          aiMessageRecord!.content = JSON.stringify(latestMessage.content)
+          aiMessageRecord!.responseId = latestMessage.id
+          aiMessageRecord!.metadata = JSON.stringify({
+            finishReason: result.finishReason,
+            usage: result.usage,
+            id: result.response.id,
+            modelId: result.response.modelId,
+            providerMetadata: result.providerMetadata,
+          })
+          aiMessageRecord!.save().catch((error) => {
+            logger.error(error, 'Failed to save AI message after streaming')
+          })
+        },
       })
 
       logger.debug('Initiated AI streamText call')
 
-      return aiResponse.pipeDataStreamToResponse(response.response)
+      return aiResponse.pipeDataStreamToResponse(response.response, {
+        sendReasoning: true,
+        getErrorMessage(error: unknown) {
+          if (error instanceof Error) {
+            return error.message
+          } else if (error instanceof ProblemException) {
+            return error.detail || error.message || error.title
+          } else if (error instanceof Exception) {
+            return error.message
+          }
+          return 'Unknown error'
+        },
+      })
     } catch (error) {
       logger.error({ error }, 'Error during AI streaming after validation')
       throw new ProblemException(

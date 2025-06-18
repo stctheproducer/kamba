@@ -3,6 +3,7 @@ import UnauthorizedException from '#exceptions/unauthorized_exception'
 import User from '#models/user'
 import { tryCatch } from '#utils/try_catch'
 import type { HttpContext } from '@adonisjs/core/http'
+import router from '@adonisjs/core/services/router'
 // import { v7 as uuidv7 } from 'uuid'
 
 export default class AuthController {
@@ -22,7 +23,14 @@ export default class AuthController {
     return inertia.location(await ally.use(typedProvider).getRedirectUrl())
   }
 
-  async handleCallback({ ally, request, inertia, auth, logger: parentLogger }: HttpContext) {
+  async handleCallback({
+    ally,
+    request,
+    inertia,
+    response,
+    auth,
+    logger: parentLogger,
+  }: HttpContext) {
     const instance = request.url()
     const logger = parentLogger.child({
       context: 'AuthController.handleCallback',
@@ -158,7 +166,8 @@ export default class AuthController {
     // Redirect the user to the desired page after login (e.g., the chat screen)
     // Assuming '/chat' is the route for the chat screen
     logger.info({ userId: user.id }, 'Redirecting user to chat screen')
-    return inertia.render('chat/index')
+    // return inertia.render('chat/index')
+    return response.redirect('/chat', false)
   }
 
   async logout({ auth, inertia, request, logger: parentLogger }: HttpContext) {
@@ -179,6 +188,6 @@ export default class AuthController {
     logger.info('User session ended, logged out')
 
     // Redirect to the homepage or login page
-    return inertia.render('home')
+    return inertia.render('auth/login')
   }
 }
