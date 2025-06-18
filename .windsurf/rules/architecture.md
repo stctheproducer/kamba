@@ -18,7 +18,7 @@ description: When planning actions to make on the codebase
 - **Database (Server)**: SQLite (for main data, cache, limiter)
 - **Database (Client)**: LiveStore (browser-based SQLite)
 - **Vector Database**: Weaviate (for RAG functionality)
-- **Authentication**: Logto
+- **Authentication**: Logto & GitHub OAuth
 - **Storage**: Cloudflare R2
 - **Realtime**: Custom WebSocket sync provider via `adonisjs-websocket`
 - **Background Jobs**: Trigger.dev

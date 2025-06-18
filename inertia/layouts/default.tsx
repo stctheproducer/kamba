@@ -26,9 +26,10 @@ const TopNavigation = () => {
   const { props } = usePage<SharedProps>()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const navigationLinks = [
-    { name: 'home', href: '/', label: 'Home' },
-    { name: 'chat.chat', href: '/chat', label: 'Chat' },
+  const links = [
+    { name: "home", href: '/', label: "Home" },
+    ...(!props.isAuthenticated ? [{ name: "auth.login", href: `/auth/${props.authProvider}/redirect`, label: "Login" }] : []),
+    { name: 'chat.chat', href: '/chat', label: "Chat" }
   ] as const
 
   return (

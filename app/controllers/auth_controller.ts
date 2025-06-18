@@ -32,7 +32,17 @@ export default class AuthController {
 
     logger.debug('Handling OAuth callback')
 
-    const oauth = ally.use(request.param('provider') as 'logto' | 'github')
+    const provider = request.param('provider')
+
+    if (!['logto', 'github'].includes(provider)) {
+      logger.warn({ provider }, 'Unsupported OAuth provider requested')
+      throw new UnauthorizedException('Unsupported OAuth provider')
+    }
+
+    // provider is now safely typed as the allowed union
+    const typedProvider = provider as 'logto' | 'github'
+
+    const oauth = ally.use(typedProvider)
 
     // The user has denied access or something went wrong with Logto
     if (oauth.accessDenied()) {
@@ -86,6 +96,7 @@ export default class AuthController {
         userRecord = new User()
         // userRecord.id = uuidv7() // Generate UUID for SQLite
         userRecord.oauthId = oauthUser.id
+        userRecord.oauthProvider = typedProvider
         userRecord.email = oauthUser.email
         userRecord.username =
           oauthUser.nickName ??
