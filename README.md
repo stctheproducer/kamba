@@ -146,7 +146,7 @@ pnpm install
 cp .env.example .env
 ```
 
-Edit the `.env` file with your configuration details, including paths for the SQLite files and external service credentials.
+Edit the `.env` file with your configuration details, including paths for the SQLite files and external service credentials, e.g. GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET, and GITHUB_REDIRECT_URI.
 
 4. Generate the projects `APP_KEY` secret using the following command
 
@@ -157,6 +157,7 @@ node ace key:generate
 5. Run database migrations (for server-side SQLite)
 
 ```bash
+mkdir tmp
 node ace migration:run
 node ace migration:run --connection=limiter
 ```
