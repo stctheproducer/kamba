@@ -15,6 +15,7 @@ import Chat from '#models/chat'
 import User from '#models/user'
 import app from '@adonisjs/core/services/app'
 import { Exception } from '@adonisjs/core/exceptions'
+import { safe } from 'safe-wrapper'
 
 export default class ChatsController {
   async index({ inertia, request }: HttpContext) {
