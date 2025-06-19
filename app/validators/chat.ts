@@ -150,6 +150,7 @@ const coreMessageSchema = vine
 export const chatMessageSchema = vine.compile(
   vine.object({
     chatId: vine.string().uuid().optional(),
+    model: vine.string(),
     headers: vine.object({
       'X-Chat-Id': vine.string().uuid().optional(),
     }),

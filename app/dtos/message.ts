@@ -11,6 +11,10 @@ export default class MessageDto extends BaseModelDto {
   declare parentMessageId: string | null
   declare role: 'system' | 'user' | 'assistant' | 'tool'
   declare text: string
+  declare model: string
+  declare promptTokens: number | null
+  declare completionTokens: number | null
+  declare totalTokens: number | null
   declare content: any
   declare metadata: any | null
   declare createdAt: string
@@ -30,6 +34,10 @@ export default class MessageDto extends BaseModelDto {
     this.parentMessageId = message.parentMessageId
     this.role = message.role
     this.text = message.text
+    this.model = message.model
+    this.promptTokens = message.promptTokens
+    this.completionTokens = message.completionTokens
+    this.totalTokens = message.totalTokens
     this.content = message.content
     this.metadata = message.metadata
     this.createdAt = message.createdAt.toISO()!

@@ -15,7 +15,6 @@ import Chat from '#models/chat'
 import User from '#models/user'
 import app from '@adonisjs/core/services/app'
 import { Exception } from '@adonisjs/core/exceptions'
-import { safe } from 'safe-wrapper'
 
 export default class ChatsController {
   async index({ inertia, request }: HttpContext) {
@@ -47,15 +46,15 @@ export default class ChatsController {
 
     if (validationError) {
       if (validationError instanceof errors.E_VALIDATION_ERROR) {
-        logger.warn(
-          { error: validationError.messages, body: request.body() },
-          'Invalid request body received'
-        )
-        throw new BadRequestException('Invalid chat message data', instance, {
+        const error = new BadRequestException('Invalid chat message data', instance, {
           errors: validationError.messages,
         })
+        logger.error(error, 'Invalid chat message data')
+        return `${error.title}: ${error.detail}`
       }
-      throw new ServerErrorException('Something went wrong with the validation', instance)
+      const error = new ServerErrorException('Something went wrong with the validation', instance)
+      logger.error(error, 'Something went wrong with the validation')
+      return `${error.title}: ${error.detail}`
     }
 
     const incomingMessages = data.messages
@@ -81,8 +80,7 @@ export default class ChatsController {
     })
 
     if (createChatError) {
-      logger.error({ error: createChatError }, 'Failed to create new chat')
-      throw new ProblemException(
+      const error = new ProblemException(
         'Failed to create chat',
         'chat-create-error',
         'Could not start a new chat session.',
@@ -90,9 +88,10 @@ export default class ChatsController {
         500,
         { dbError: createChatError.message }
       )
+      logger.error(error, 'Failed to create new chat')
+      return `${error.title}: ${error.detail}`
     }
     chatRecord = newChat
-    response.header('X-Chat-Id', chatRecord.id)
     logger.debug({ chatRecord }, 'New chat created (mocked)')
 
     // Save the user message linked to the new chat
@@ -100,6 +99,7 @@ export default class ChatsController {
       const message = new Message()
       message.chatId = chatRecord.id
       message.role = 'user'
+      message.model = data.model
       if (typeof latestUserMessage.content === 'string') {
         message.text = latestUserMessage.content
       } else {
@@ -113,19 +113,18 @@ export default class ChatsController {
       return message
     })
 
-    logger.debug(savedUserMessage, 'This is the saved user message')
-
     if (saveUserMessageError) {
-      logger.error(
-        { error: saveUserMessageError, chatId: chatRecord.id },
-        'Failed to save user message'
+      const error = new ProblemException(
+        'Failed to save user message',
+        'user-message-save-error',
+        'Could not save user message.',
+        instance,
+        500,
+        { dbError: saveUserMessageError.message }
       )
       // Decide policy: continue with AI interaction despite DB error, or halt?
       // For this mock, we'll log and proceed.
-      logger.error(
-        { error: saveUserMessageError, chatId: chatRecord.id },
-        'Continuing AI interaction despite user message save failure (mock)'
-      )
+      logger.error(error, 'Continuing AI interaction despite user message save failure (mock)')
     } else {
       userMessageRecord = savedUserMessage
       logger.debug(
@@ -139,6 +138,7 @@ export default class ChatsController {
       const message = new Message()
       message.chatId = chatRecord.id
       message.role = 'assistant' // Assuming assistant response
+      message.model = data.model
       message.text = ''
       message.content = JSON.stringify([]) // Start empty
       message.parentMessageId = userMessageRecord?.id || null // Link to user message
@@ -148,13 +148,7 @@ export default class ChatsController {
     })
 
     if (savePlaceholderError) {
-      logger.error(
-        { error: savePlaceholderError, chatId: chatRecord.id },
-        'Failed to save placeholder AI message'
-      )
-      // This is a critical error. Without a message ID, we can't update the record later.
-      // Throw a ProblemException to stop the request and notify the client.
-      throw new ProblemException(
+      const error = new ProblemException(
         'Database Error',
         'ai-message-placeholder-save-error',
         'Could not save AI message placeholder before streaming.',
@@ -162,16 +156,15 @@ export default class ChatsController {
         500,
         { chatId: chatRecord.id, dbError: savePlaceholderError.message }
       )
+      logger.error(error, 'Error saving placeholder AI message')
+      return `${error.title}: ${error.detail}`
     }
     aiMessageRecord = placeholderAIMessage
-    logger.debug(
-      { messageId: aiMessageRecord.id, chatId: chatRecord.id },
-      'Placeholder AI message saved (mocked)'
-    )
 
+    response.response.setHeader('X-Chat-Id', chatRecord.id)
     try {
       const aiResponse = streamText({
-        model: openai('gpt-3.5-turbo'),
+        model: openai(data.model),
         // @ts-ignore
         messages: incomingMessages,
         // onError(error) {
@@ -180,8 +173,33 @@ export default class ChatsController {
         // onChunk: (chunk) => {
         //   logger.debug({ chunk }, 'Received chunk from AI streamText')
         // },
-        onFinish: (result) => {
+        onFinish: async (result) => {
           const latestMessage = result.response.messages[result.response.messages.length - 1]
+          if (typeof latestMessage.content === 'string') {
+            aiMessageRecord.text = latestMessage.content
+          } else {
+            const lastContent = latestMessage.content[latestMessage.content.length - 1]
+            switch (lastContent.type) {
+              case 'text':
+                aiMessageRecord.text = lastContent.text
+                break
+              case 'file':
+                aiMessageRecord.text = lastContent.data.toString()
+                break
+              case 'reasoning':
+                aiMessageRecord.text = lastContent.text
+                break
+              case 'redacted-reasoning':
+                aiMessageRecord.text = lastContent.data
+                break
+              case 'tool-call':
+                aiMessageRecord.text = lastContent.toolCallId
+                break
+              case 'tool-result':
+                aiMessageRecord.text = lastContent.toolCallId
+                break
+            }
+          }
           aiMessageRecord.content = JSON.stringify(latestMessage.content)
           aiMessageRecord.responseId = latestMessage.id
           aiMessageRecord.metadata = JSON.stringify({
@@ -191,9 +209,10 @@ export default class ChatsController {
             modelId: result.response.modelId,
             providerMetadata: result.providerMetadata,
           })
-          aiMessageRecord.save().catch((error) => {
-            logger.error(error, 'Failed to save AI message after streaming')
-          })
+          aiMessageRecord.promptTokens = result.usage.promptTokens
+          aiMessageRecord.completionTokens = result.usage.completionTokens
+          aiMessageRecord.totalTokens = result.usage.totalTokens
+          await aiMessageRecord.save()
         },
       })
 
@@ -202,14 +221,18 @@ export default class ChatsController {
       return aiResponse.pipeDataStreamToResponse(response.response, {
         sendReasoning: true,
         getErrorMessage(error: unknown) {
-          if (error instanceof Error) {
+          if (typeof error === 'string') {
+            logger.debug('Returning error to UI')
+            return error
+          } else if (error instanceof Error) {
             return error.message
           } else if (error instanceof ProblemException) {
             return error.detail || error.message || error.title
           } else if (error instanceof Exception) {
             return error.message
           }
-          return 'Unknown error'
+
+          return JSON.stringify(error)
         },
       })
     } catch (error) {

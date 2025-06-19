@@ -8,11 +8,15 @@ export default class extends BaseSchema {
   async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary()
-      table.string('response_id').nullable()
+      table.string('response_id', 128).nullable().index()
       table.uuid('chat_id').references('chats.id').onDelete('CASCADE').notNullable()
       table.uuid('parent_message_id').references('messages.id').onDelete('CASCADE').nullable() // For branching
-      table.string('role').notNullable() // 'system', 'user', 'assistant', 'tool'
+      table.string('role', 64).notNullable().index() // 'system', 'user', 'assistant', 'tool'
+      table.string('model', 64).notNullable().index() // e.g., 'gpt-3.5-turbo'
       table.text('text').notNullable() // Message text only
+      table.integer('prompt_tokens').nullable().index()
+      table.integer('completion_tokens').nullable().index()
+      table.integer('total_tokens').nullable().index()
       table.jsonb('content').notNullable() // Message content incl. messages array
       table.jsonb('metadata').nullable() // e.g., tool calls, source documents
       table.timestamp('created_at', { useTz: true }).notNullable()

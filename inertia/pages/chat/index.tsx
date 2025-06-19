@@ -531,12 +531,12 @@ const ChatPage = () => {
 const RuntimeChatWrapper = () => {
   const { props } = usePage<ChatIndexPage>()
 
-  if (props.id) {
-    router.visit(`/chat/${props.id}`)
-  }
+  console.log("Chat ID at start:", props.id)
 
   const runtime = useChatRuntime({
     api: '/api/chat',
+    initialMessages: [],
+
     headers: async () => {
       const headers = new Headers()
       if (props.id) {
@@ -546,16 +546,26 @@ const RuntimeChatWrapper = () => {
       return headers
     },
     body: {
-      chatId: props.id
+      chatId: props.id,
+      model: 'gpt-4o-mini'
     },
     onResponse(response) {
       const chatId = response.headers.get('X-Chat-Id')
+      console.log("chatId", chatId)
       if (!props.id && chatId) {
-        router.visit(`/chat/${chatId}`)
+        router.replace({
+          url: `/chat/${chatId}`,
+          props: (currentProps) => ({
+            ...currentProps,
+            id: chatId
+          }),
+          preserveState: true,
+          preserveScroll: true
+        })
       }
     },
     onError(error) {
-      return error.message
+      console.error(error.message)
     }
   })
 

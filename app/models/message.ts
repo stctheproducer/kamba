@@ -37,6 +37,18 @@ export default class Message extends compose(BaseModel, SoftDeletes) {
   declare text: string
 
   @column()
+  declare model: string
+
+  @column()
+  declare promptTokens: number | null
+
+  @column()
+  declare completionTokens: number | null
+
+  @column()
+  declare totalTokens: number | null
+
+  @column()
   declare content: any
 
   @column()
