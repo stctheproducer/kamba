@@ -1,7 +1,9 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'models'
+  protected tableName = 'ai_models'
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {

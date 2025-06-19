@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 // import env from '#start/env'
 import { tryCatch } from '#utils/try_catch'
 import { inject } from '@adonisjs/core'

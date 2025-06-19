@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { DateTime } from 'luxon'
 import { BaseModel, column, beforeCreate } from '@adonisjs/lucid/orm'
 import { v7 as uuidv7 } from 'uuid'

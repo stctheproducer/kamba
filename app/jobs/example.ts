@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { logger, schedules, wait } from '@trigger.dev/sdk/v3'
 
 export const firstScheduledTask = schedules.task({

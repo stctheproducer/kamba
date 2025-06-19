@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { Link } from '@tuyau/inertia/react'
 import { buttonVariants } from '@/components/ui/button'
 import { Bot } from 'lucide-react'

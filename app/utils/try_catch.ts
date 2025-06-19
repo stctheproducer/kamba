@@ -1,7 +1,9 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { Exception } from '@adonisjs/core/exceptions'
 
 // Define the result tuple type
-type Result<T, E> = [T | null, E | null]
+type Result<T, E> = [T, null] | [null, E]
 
 /**
  * Wraps an async function call in a try-catch block

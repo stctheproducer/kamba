@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import * as React from 'react'
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'

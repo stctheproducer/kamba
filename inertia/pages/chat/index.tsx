@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import React, { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import ChatLayout from '@/layouts/chat'

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import ServerErrorException from '#exceptions/server_error_exception'
 import UnauthorizedException from '#exceptions/unauthorized_exception'
 import User from '#models/user'

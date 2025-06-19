@@ -1,6 +1,8 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { BaseModelDto } from '@adocasts.com/dto/base'
 import UserModel from '#models/user_model'
-import ModelDto from '#dtos/model'
+import AiModelDto from '#dtos/ai_model'
 import UserDto from '#dtos/user'
 
 export default class UserModelDto extends BaseModelDto {
@@ -12,7 +14,7 @@ export default class UserModelDto extends BaseModelDto {
   declare createdAt: string
   declare updatedAt: string
   declare user: UserDto
-  declare model: ModelDto
+  declare model: AiModelDto
 
   constructor(userModel?: UserModel) {
     super()
@@ -27,6 +29,6 @@ export default class UserModelDto extends BaseModelDto {
     this.createdAt = userModel.createdAt.toISO()!
     this.updatedAt = userModel.updatedAt.toISO()!
     this.user = new UserDto(userModel.user)
-    this.model = new ModelDto(userModel.model)
+    this.model = new AiModelDto(userModel.model)
   }
 }

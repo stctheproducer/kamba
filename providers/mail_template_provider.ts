@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import type { ApplicationService } from '@adonisjs/core/types'
 import { Message } from '@adonisjs/mail'
 import { render as renderEmail } from '@react-email/render'

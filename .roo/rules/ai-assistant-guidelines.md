@@ -35,6 +35,12 @@
 - Respect the SQLite and LiveStore database choices
 - Consider the WebSocket synchronization mechanism in all suggestions
 - Preserve the separation between frontend (React/Inertia) and backend (AdonisJS)
+- Add comments to the top of newly created files to identify the project license
+
+  ```ts
+  // SPDX-License-Identifier: Apache-2.0
+  // Copyright 2025 Chanda Mulenga
+  ```
 
 ## Documentation
 

@@ -1,14 +1,16 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { DateTime } from 'luxon'
 import { BaseModel, column, hasMany, beforeCreate } from '@adonisjs/lucid/orm'
 import type { HasMany } from '@adonisjs/lucid/types/relations'
 import UserModel from '#models/user_model'
 import { v7 as uuidv7 } from 'uuid'
 
-export default class Model extends BaseModel {
+export default class AiModel extends BaseModel {
   static selfAssignPrimaryKey = true
 
   @beforeCreate()
-  static assignUuid(model: Model) {
+  static assignUuid(model: AiModel) {
     if (!model.id) {
       model.id = uuidv7()
     }

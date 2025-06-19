@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { healthChecks } from '#start/health'
 import type { HttpContext } from '@adonisjs/core/http'
 

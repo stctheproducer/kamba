@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import UserRegistered from '#events/user/user_registered'
 import UserLoggedIn from '#events/user/user_logged_in'
 import UserLoggedOut from '#events/user/user_logged_out'

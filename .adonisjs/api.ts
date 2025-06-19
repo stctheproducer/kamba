@@ -28,8 +28,8 @@ type ChatIdGetHead = {
   response: MakeTuyauResponse<import('../app/controllers/chats_controller.ts').default['index'], true>
 }
 type ApiChatPost = {
-  request: unknown
-  response: MakeTuyauResponse<import('../app/controllers/chats_controller.ts').default['handleChat'], false>
+  request: MakeTuyauRequest<InferInput<typeof import('../app/validators/chat.ts')['chatMessageSchema']>>
+  response: MakeTuyauResponse<import('../app/controllers/chats_controller.ts').default['handleChat'], true>
 }
 export interface ApiDefinition {
   'auth': {

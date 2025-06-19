@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import type { ApplicationService } from '@adonisjs/core/types'
 import { type Database } from '@adonisjs/lucid/database'
 import { type Logger } from '@adonisjs/core/logger'
