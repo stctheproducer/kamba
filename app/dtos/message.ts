@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { BaseModelDto } from '@adocasts.com/dto/base'
 import Message from '#models/message'
 import ChatDto from '#dtos/chat'
@@ -8,6 +10,7 @@ export default class MessageDto extends BaseModelDto {
   declare responseId: string | null
   declare parentMessageId: string | null
   declare role: 'system' | 'user' | 'assistant' | 'tool'
+  declare text: string
   declare content: any
   declare metadata: any | null
   declare createdAt: string
@@ -26,6 +29,7 @@ export default class MessageDto extends BaseModelDto {
     this.responseId = message.responseId
     this.parentMessageId = message.parentMessageId
     this.role = message.role
+    this.text = message.text
     this.content = message.content
     this.metadata = message.metadata
     this.createdAt = message.createdAt.toISO()!

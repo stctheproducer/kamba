@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { HttpContext } from '@adonisjs/core/http'
 import ProblemException from './problem_exception.js'
 

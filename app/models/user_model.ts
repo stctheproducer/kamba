@@ -1,8 +1,10 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { DateTime } from 'luxon'
 import { BaseModel, column, belongsTo, beforeCreate } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from '#models/user'
-import Model from '#models/model'
+import AiModel from '#models/ai_model'
 import { v7 as uuidv7 } from 'uuid'
 
 export default class UserModel extends BaseModel {
@@ -39,6 +41,6 @@ export default class UserModel extends BaseModel {
   @belongsTo(() => User)
   declare user: BelongsTo<typeof User>
 
-  @belongsTo(() => Model)
-  declare model: BelongsTo<typeof Model>
+  @belongsTo(() => AiModel)
+  declare model: BelongsTo<typeof AiModel>
 }

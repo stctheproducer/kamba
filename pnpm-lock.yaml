@@ -242,9 +242,6 @@ importers:
       remark-gfm:
         specifier: ^4.0.1
         version: 4.0.1
-      safe-wrapper:
-        specifier: ^3.0.0
-        version: 3.0.0
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
@@ -6498,9 +6495,6 @@ packages:
   safe-stable-stringify@2.5.0:
     resolution: {integrity: sha512-b3rppTKm9T+PsVCBEOUR46GWI7fdOs00VKZ1+9c1EWDaDMvjQc6tUwuFyIprgGgTcWoVHSKrU8H31ZHA2e0RHA==}
     engines: {node: '>=10'}
-
-  safe-wrapper@3.0.0:
-    resolution: {integrity: sha512-EmZzGKwqtAqwQE5CGaMRAZc59JRdC7PWpO2YK/Fr3xa1uoazGP3ulFdySn3RKMrQ7RkFoixtFa7u5WFqf+haIA==}
 
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
@@ -14486,8 +14480,6 @@ snapshots:
   safe-buffer@5.2.1: {}
 
   safe-stable-stringify@2.5.0: {}
-
-  safe-wrapper@3.0.0: {}
 
   safer-buffer@2.1.2: {}
 

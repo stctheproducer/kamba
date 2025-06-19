@@ -1,7 +1,9 @@
-import Model from '#models/model'
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
+import AiModel from '#models/ai_model'
 import { BaseDto } from '@adocasts.com/dto/base'
 
-export default class ModelDto extends BaseDto {
+export default class AiModelDto extends BaseDto {
   declare id: string
   declare name: string
   declare provider: string
@@ -11,7 +13,7 @@ export default class ModelDto extends BaseDto {
   declare createdAt: string
   declare updatedAt: string
 
-  constructor(model?: Model) {
+  constructor(model?: AiModel) {
     super()
 
     if (!model) return

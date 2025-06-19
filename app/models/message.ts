@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { DateTime } from 'luxon'
 import { BaseModel, column, belongsTo, hasMany, beforeCreate } from '@adonisjs/lucid/orm'
 import type { BelongsTo, HasMany } from '@adonisjs/lucid/types/relations'
@@ -30,6 +32,9 @@ export default class Message extends compose(BaseModel, SoftDeletes) {
 
   @column()
   declare role: 'system' | 'user' | 'assistant' | 'tool'
+
+  @column()
+  declare text: string
 
   @column()
   declare content: any

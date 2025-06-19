@@ -1,8 +1,18 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import vine from '@vinejs/vine'
 import { Infer } from '@vinejs/vine/types'
 
 function hasField(field: string, value: unknown, type: string) {
   return vine.helpers.isObject(value) && value[field] === type
+}
+
+function isArrayOfType(value: unknown, type: string): boolean {
+  return (
+    Array.isArray(value) &&
+    value.length > 0 &&
+    value.every((item) => vine.helpers.isObject(item) && item.type === type)
+  )
 }
 
 export const chatIndexValidator = vine.compile(
@@ -72,18 +82,11 @@ const systemMessageSchema = vine.object({
 })
 
 const userContent = vine.union([
-  vine.union.if(
-    (value) => hasField('type', value, 'text'),
-    vine.array(textPartSchema).minLength(1)
-  ),
-  vine.union.if(
-    (value) => hasField('type', value, 'image'),
-    vine.array(imagePartSchema).minLength(1)
-  ),
-  vine.union.if(
-    (value) => hasField('type', value, 'file'),
-    vine.array(filePartSchema).minLength(1)
-  ),
+  // Handle array of objects with type property
+  vine.union.if((value) => isArrayOfType(value, 'text'), vine.array(textPartSchema).minLength(1)),
+  vine.union.if((value) => isArrayOfType(value, 'image'), vine.array(imagePartSchema).minLength(1)),
+  vine.union.if((value) => isArrayOfType(value, 'file'), vine.array(filePartSchema).minLength(1)),
+  // Handle string content
   vine.union.else(vine.string().minLength(1)),
 ])
 
@@ -95,34 +98,27 @@ const userMessageSchema = vine.object({
 })
 
 const assistantContent = vine.union([
+  // Handle array of objects with type property
+  vine.union.if((value) => isArrayOfType(value, 'text'), vine.array(textPartSchema).minLength(1)),
+  vine.union.if((value) => isArrayOfType(value, 'image'), vine.array(imagePartSchema).minLength(1)),
+  vine.union.if((value) => isArrayOfType(value, 'file'), vine.array(filePartSchema).minLength(1)),
   vine.union.if(
-    (value) => hasField('type', value, 'text'),
-    vine.array(textPartSchema).minLength(1)
-  ),
-  vine.union.if(
-    (value) => hasField('type', value, 'image'),
-    vine.array(imagePartSchema).minLength(1)
-  ),
-  vine.union.if(
-    (value) => hasField('type', value, 'file'),
-    vine.array(filePartSchema).minLength(1)
-  ),
-  vine.union.if(
-    (value) => hasField('type', value, 'reasoning'),
+    (value) => isArrayOfType(value, 'reasoning'),
     vine.array(reasoningPartSchema).minLength(1)
   ),
   vine.union.if(
-    (value) => hasField('type', value, 'redacted-reasoning'),
+    (value) => isArrayOfType(value, 'redacted-reasoning'),
     vine.array(redactedReasoningPartSchema).minLength(1)
   ),
   vine.union.if(
-    (value) => hasField('type', value, 'tool-call'),
+    (value) => isArrayOfType(value, 'tool-call'),
     vine.array(toolCallPartSchema).minLength(1)
   ),
   vine.union.if(
-    (value) => hasField('type', value, 'tool-result'),
+    (value) => isArrayOfType(value, 'tool-result'),
     vine.array(toolResultPartSchema).minLength(1)
   ),
+  // Handle string content
   vine.union.else(vine.string().minLength(1)),
 ])
 

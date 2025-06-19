@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 export default function ChatLayout({ children }: { children: React.ReactNode }) {
 
   return (

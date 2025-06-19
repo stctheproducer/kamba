@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { ChatIndexPage } from '@/types/chat'
 import { Head } from '@inertiajs/react'
 import { Subscription, Transmit } from '@adonisjs/transmit-client'

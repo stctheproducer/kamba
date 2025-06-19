@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2025 Chanda Mulenga
 import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
@@ -10,7 +12,8 @@ export default class extends BaseSchema {
       table.uuid('chat_id').references('chats.id').onDelete('CASCADE').notNullable()
       table.uuid('parent_message_id').references('messages.id').onDelete('CASCADE').nullable() // For branching
       table.string('role').notNullable() // 'system', 'user', 'assistant', 'tool'
-      table.jsonb('content').notNullable()
+      table.text('text').notNullable() // Message text only
+      table.jsonb('content').notNullable() // Message content incl. messages array
       table.jsonb('metadata').nullable() // e.g., tool calls, source documents
       table.timestamp('created_at', { useTz: true }).notNullable()
       table.timestamp('updated_at', { useTz: true }).notNullable()

@@ -175,7 +175,6 @@
     "react-shiki": "^0.7.1",
     "reflect-metadata": "^0.2.2",
     "remark-gfm": "^4.0.1",
-    "safe-wrapper": "^3.0.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.9",
     "uuid": "^11.1.0",
