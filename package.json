@@ -150,7 +150,7 @@
     "adonis-captcha-guard": "^1.0.1",
     "adonis-lucid-filter": "^5.2.0",
     "adonis-lucid-soft-deletes": "^2.1.0",
-    "ai": "^4.3.16",
+    "ai": "^5.0.52",
     "better-sqlite3": "^11.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
